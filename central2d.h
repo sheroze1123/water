@@ -266,6 +266,8 @@ private:
     void compute_fg_speeds(real& cx, real& cy);
     void limited_derivs();
     void compute_step(int io, real dt);
+	void init_smallgrid( &Central2D<Physics, Limiter> sub_sim, int s, int size_ratio );
+	void map_to_maingrid( &Central2D<Physics, Limiter> sub_sim, int s, int size_ratio )
 
 };
 
@@ -732,7 +734,6 @@ void Central2D<Physics, Limiter>::run(real tfinal)
     int sub_number = nx*nx/sub_size/sub_size;
 	int time_steps= 10; // number of time steps done before synchronisation -- MUST BE EVEN
 	int size_ratio=nx/sub_size; // assume that this is a integer for now
-	// have to deal with number of time steps, how to choose, etc
 
     while (!done) {
         real dt;
@@ -802,7 +803,7 @@ void Central2D<Physics, Limiter>::solution_check()
 * s is the index of the subgrid inside of the main grid
 */
 template <class Physics, class Limiter>
-void Central2D<Physics, Limiter>::init_smallgrid( &Central2D<Physics, Limiter> sub_sim, s, size_ratio ){
+void Central2D<Physics, Limiter>::init_smallgrid( &Central2D<Physics, Limiter> sub_sim, int s, int size_ratio ){
 	int ycoor= (s/size_ratio)*sub_sim::nx;
 	int xcoor = (s % size_ratio)*sub_sim::nx;
 	int t = sub_sim::time_steps;
@@ -821,7 +822,7 @@ void Central2D<Physics, Limiter>::init_smallgrid( &Central2D<Physics, Limiter> s
 * does not include the ghost cells of the small grid
 *
 */
-void Central2D<Physics, Limiter>::map_to_maingrid( &Central2D<Physics, Limiter> sub_sim, s, size_ratio ){
+void Central2D<Physics, Limiter>::map_to_maingrid( &Central2D<Physics, Limiter> sub_sim, int s, int size_ratio ){
 	int ycoor= (s/size_ratio)*sub_sim::nx;
 	int xcoor = (s % size_ratio)*sub_sim::nx;
 	int t = sub_sim::time_steps;
