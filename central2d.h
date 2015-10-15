@@ -727,23 +727,35 @@ void Central2D<Physics, Limiter>::run(real tfinal)
 {
     bool done = false;
     real t = 0;
+    int counter =0;
+    int sub_size = 100; // size of subdomain
+    int sub_number = nx*nx/sub_size/sub_size;
+
+
+
     while (!done) {
+	counter+=1;
         real dt;
+	for(int =0; s < sub_number, ++s){ // assigns subdomains pragma omp here
+
+
         for (int io = 0; io < 2; ++io) {
             real cx, cy;
             apply_periodic();
             compute_fg_speeds(cx, cy);
+	    printf("|cx,cy: %g, %g", cx, cy);
             limited_derivs();
             if (io == 0) {
                 dt = cfl / std::max(cx/dx, cy/dy);
                 if (t + 2*dt >= tfinal) {
                     dt = (tfinal-t)/2;
                     done = true;
+		    printf("even time stepper called: %d times\n",counter);
                 }
             }
             compute_step(io, dt);
             t += dt;
-        }
+        }		
     }
 }
 
