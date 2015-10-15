@@ -203,7 +203,7 @@ int main(int argc, char** argv)
         fprintf(stderr, "Unknown initial conditions\n");
     }
     
-    Sim sim(width,width, nx,nx);
+    Sim sim(width,width, nx,nx, 0); // no need for ghost cells in the main grid
     SimViz<Sim> viz(fname.c_str(), sim);
     sim.init(icfun1, icfun2, icfun3);
     sim.solution_check();

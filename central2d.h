@@ -6,7 +6,7 @@
 #include <cassert>
 #include <vector>
 #include <iostream>
-
+#include <omp.h>
 //ldoc on
 /**
  * # Jiang-Tadmor central difference scheme
@@ -100,11 +100,12 @@ public:
     typedef typename Physics::vec  vec;
 
     Central2D(real w, real h,     // Domain width / height
-              int nx, int ny,     // Number of cells in x/y (without ghosts)
-              real cfl = 0.45) :  // Max allowed CFL number
+              int nx, int ny, // Number of cells in x/y (without ghosts)
+              int time_steps, // number of time steps: added to be able to declare sub_sim as an object of sim
+			  real cfl = 0.45) :  // Max allowed CFL number
         nx(nx), ny(ny),
-        nx_all(nx + 2*nghost),
-        ny_all(ny + 2*nghost),
+        nx_all(nx + 2*time_steps*nghost),
+        ny_all(ny + 2*time_steps*nghost),
         dx(w/nx), dy(h/ny),
         cfl(cfl), 
         u_h_   ( nx_all * ny_all),
@@ -162,7 +163,7 @@ public:
     
 private:
     static constexpr int nghost = 3;   // Number of ghost cells
-
+	const int time_steps;
     const int nx, ny;         // Number of (non-ghost) cells in x/y
     const int nx_all, ny_all; // Total cells in x/y (including ghost)
     const real dx, dy;        // Cell size in x/y
@@ -727,38 +728,38 @@ void Central2D<Physics, Limiter>::run(real tfinal)
 {
     bool done = false;
     real t = 0;
-    int counter =0;
     int sub_size = 100; // size of subdomain
     int sub_number = nx*nx/sub_size/sub_size;
-
-
+	int time_steps= 10; // number of time steps done before synchronisation -- MUST BE EVEN
+	int size_ratio=nx/sub_size; // assume that this is a integer for now
+	// have to deal with number of time steps, how to choose, etc
 
     while (!done) {
-	counter+=1;
         real dt;
-	for(int =0; s < sub_number, ++s){ // assigns subdomains pragma omp here
-
-
-        for (int io = 0; io < 2; ++io) {
-            real cx, cy;
-            apply_periodic();
-            compute_fg_speeds(cx, cy);
-	    printf("|cx,cy: %g, %g", cx, cy);
-            limited_derivs();
-            if (io == 0) {
-                dt = cfl / std::max(cx/dx, cy/dy);
-                if (t + 2*dt >= tfinal) {
-                    dt = (tfinal-t)/2;
-                    done = true;
-		    printf("even time stepper called: %d times\n",counter);
-                }
-            }
-            compute_step(io, dt);
-            t += dt;
-        }		
-    }
+		real cx, cy;
+		compute_fg_speeds(cx, cy);
+		cx = 1.5*cx; // overestimating cx and cy as we wont be recomputing it for the next #time_steps steps
+		cy=1.5*cy;
+		dt = cfl / std::max(cx/dx, cy/dy);
+		if (t+time_steps*dt >= tfinal){ // if the next #time_steps steps bring us to the end, set dt to be 1/time_steps of that
+			dt = (tfinal-t)/time_steps; // could probably make this better by having two different dt's -- could have at most (time_steps -1) unnecessarily calls
+		}
+		#pragma omp parallel for 
+		//shared(u_h, u_hv, u_hu, maxspeed) private(s, sub_sim)\ i think this is not needed? not sure
+		for(int s=0; s < sub_number; ++s){
+			central2D sub_sim(ratio*w, ratio*h, nx, ny, time_steps) // builds sub-simulation on smaller grid
+			init_smallgrid(sub_sim, s, size_ratio);
+			for (int io = 0; io < time_steps; ++io) {
+				sub_sim::limited_derivs()
+				sub_sim::compute_step(io%2, dt);
+			}
+			map_to_maingrid( sub_sim, s, size_ratio);
+		}
+		if(t+time_steps*dt==tfinal){
+			done=true;}
+		else{t+=time_steps*dt;}
+	}	
 }
-
 /**
  * ### Diagnostics
  * 
@@ -778,8 +779,8 @@ void Central2D<Physics, Limiter>::solution_check()
     real h_sum = 0, hu_sum = 0, hv_sum = 0;
     real hmin = u_h(nghost,nghost);
     real hmax = hmin;
-    for (int j = nghost; j < ny+nghost; ++j)
-        for (int i = nghost; i < nx+nghost; ++i) {
+    for (int j = 0; j < ny_all; ++j) // changed this to whole grid as there is no ghost cell in main grid
+        for (int i = 0; i < nx_all; ++i) {
             real h = u_h(i,j);
             h_sum += h;
             hu_sum += u_hu(i,j);
@@ -795,6 +796,47 @@ void Central2D<Physics, Limiter>::solution_check()
     printf("-\n  Volume: %g\n  Momentum: (%g, %g)\n  Range: [%g, %g]\n",
            h_sum, hu_sum, hv_sum, hmin, hmax);
 }
+
+/** This function intializes a sub_simulation grid to part of a main simulation 
+* grid.
+* s is the index of the subgrid inside of the main grid
+*/
+template <class Physics, class Limiter>
+void Central2D<Physics, Limiter>::init_smallgrid( &Central2D<Physics, Limiter> sub_sim, s, size_ratio ){
+	int ycoor= (s/size_ratio)*sub_sim::nx;
+	int xcoor = (s % size_ratio)*sub_sim::nx;
+	int t = sub_sim::time_steps;
+	for( int i=0; i < nxall; ++i){
+		for( int j=0; j < nyall; ++j){
+			sub_sim::u_h(i,j)=u_h((xcoor-t*ghost+i +nx_all)%nx_all,(ycoor-t*nghost+j+ny_all)%ny_all)
+			sub_sim::u_hu(i,j)=u_hu((xcoor-t*ghost+i +nx_all)%nx_all,(ycoor-t*nghost+j+ny_all)%ny_all)
+			sub_sim::u_hv(i,j)=u_hv((xcoor-t*ghost+i +nx_all)%nx_all,(ycoor-t*nghost+j+ny_all)%ny_all)
+			
+		}
+	}
+	
+}
+
+/** This function maps the smaller grid back to their position on the big grid
+* does not include the ghost cells of the small grid
+*
+*/
+void Central2D<Physics, Limiter>::map_to_maingrid( &Central2D<Physics, Limiter> sub_sim, s, size_ratio ){
+	int ycoor= (s/size_ratio)*sub_sim::nx;
+	int xcoor = (s % size_ratio)*sub_sim::nx;
+	int t = sub_sim::time_steps;
+	for( int i=t*nghost; i < sub_sim::nx +t*nghost; ++i){
+		for( int j=t*nghost; j < sub_sim::nx +t*nghost; ++j){
+			u_h(xcoor+i,ycoor+j)= sub_sim::u_h(i,j)
+			u_hu(xcoor+i,ycoor+j)= sub_sim::u_hu(i,j)
+			u_hv(xcoor+i,ycoor+j)= sub_sim::u_hv(i,j)
+			
+		}
+	}
+	
+}
+
+
 
 //ldoc off
 #endif /* CENTRAL2D_H*/
