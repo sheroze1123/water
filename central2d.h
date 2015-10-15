@@ -103,7 +103,8 @@ public:
               int nx, int ny, // Number of cells in x/y (without ghosts)
               int time_steps, // number of time steps: added to be able to declare sub_sim as an object of sim
 			  real cfl = 0.45) :  // Max allowed CFL number
-        nx(nx), ny(ny),
+        nx(nx), ny(ny), time_steps(time_steps),
+	w(w), h(h),
         nx_all(nx + 2*time_steps*nghost),
         ny_all(ny + 2*time_steps*nghost),
         dx(w/nx), dy(h/ny),
@@ -163,7 +164,9 @@ public:
     
 private:
     static constexpr int nghost = 3;   // Number of ghost cells
-	const int time_steps;
+    const int w; //added those as variables of object as we need to pass them to children
+    const int h;
+    const int time_steps;
     const int nx, ny;         // Number of (non-ghost) cells in x/y
     const int nx_all, ny_all; // Total cells in x/y (including ghost)
     const real dx, dy;        // Cell size in x/y
@@ -266,8 +269,8 @@ private:
     void compute_fg_speeds(real& cx, real& cy);
     void limited_derivs();
     void compute_step(int io, real dt);
-	void init_smallgrid( &Central2D<Physics, Limiter> sub_sim, int s, int size_ratio );
-	void map_to_maingrid( &Central2D<Physics, Limiter> sub_sim, int s, int size_ratio )
+    void init_smallgrid( Central2D<Physics, Limiter>& sub_sim, int s, int size_ratio );
+    void map_to_maingrid( Central2D<Physics, Limiter>& sub_sim, int s, int size_ratio );
 
 };
 
@@ -289,18 +292,19 @@ void Central2D<Physics, Limiter>::init(F f0, F f1, F f2)
 {
     for (int iy = 0; iy < ny; ++iy) {
         for (int ix = 0; ix < nx; ++ix)
-            f0(u_h(nghost+ix,nghost+iy), (ix+0.5)*dx, (iy+0.5)*dy);
+            f0(u_h(ix,iy), (ix+0.5)*dx, (iy+0.5)*dy);
     }
 
     for (int iy = 0; iy < ny; ++iy) {
         for (int ix = 0; ix < nx; ++ix)
-            f1(u_hu(nghost+ix,nghost+iy), (ix+0.5)*dx, (iy+0.5)*dy);
+            f1(u_hu(ix,iy), (ix+0.5)*dx, (iy+0.5)*dy);
     }
 
     for (int iy = 0; iy < ny; ++iy) {
         for (int ix = 0; ix < nx; ++ix)
-            f2(u_hv(nghost+ix,nghost+iy), (ix+0.5)*dx, (iy+0.5)*dy);
+            f2(u_hv(ix,iy), (ix+0.5)*dx, (iy+0.5)*dy);
     }
+    
 }
 
 /**
@@ -728,12 +732,14 @@ void Central2D<Physics, Limiter>::compute_step(int io, real dt)
 template <class Physics, class Limiter>
 void Central2D<Physics, Limiter>::run(real tfinal)
 {
+
+    
     bool done = false;
     real t = 0;
     int sub_size = 100; // size of subdomain
     int sub_number = nx*nx/sub_size/sub_size;
-	int time_steps= 10; // number of time steps done before synchronisation -- MUST BE EVEN
-	int size_ratio=nx/sub_size; // assume that this is a integer for now
+    int time_steps= 10; // number of time steps done before synchronisation -- MUST BE EVEN
+    int size_ratio=nx/sub_size; // assume that this is a integer for now
 
     while (!done) {
         real dt;
@@ -748,11 +754,11 @@ void Central2D<Physics, Limiter>::run(real tfinal)
 		#pragma omp parallel for 
 		//shared(u_h, u_hv, u_hu, maxspeed) private(s, sub_sim)\ i think this is not needed? not sure
 		for(int s=0; s < sub_number; ++s){
-			central2D sub_sim(ratio*w, ratio*h, nx, ny, time_steps) // builds sub-simulation on smaller grid
+			Central2D<Physics, Limiter> sub_sim(size_ratio*w, size_ratio*h, sub_size, sub_size, time_steps);// builds sub-simulation on smaller grid
 			init_smallgrid(sub_sim, s, size_ratio);
 			for (int io = 0; io < time_steps; ++io) {
-				sub_sim::limited_derivs()
-				sub_sim::compute_step(io%2, dt);
+				sub_sim.limited_derivs(); 
+				sub_sim.compute_step(io%2, dt);
 			}
 			map_to_maingrid( sub_sim, s, size_ratio);
 		}
@@ -803,15 +809,16 @@ void Central2D<Physics, Limiter>::solution_check()
 * s is the index of the subgrid inside of the main grid
 */
 template <class Physics, class Limiter>
-void Central2D<Physics, Limiter>::init_smallgrid( &Central2D<Physics, Limiter> sub_sim, int s, int size_ratio ){
-	int ycoor= (s/size_ratio)*sub_sim::nx;
-	int xcoor = (s % size_ratio)*sub_sim::nx;
-	int t = sub_sim::time_steps;
-	for( int i=0; i < nxall; ++i){
-		for( int j=0; j < nyall; ++j){
-			sub_sim::u_h(i,j)=u_h((xcoor-t*ghost+i +nx_all)%nx_all,(ycoor-t*nghost+j+ny_all)%ny_all)
-			sub_sim::u_hu(i,j)=u_hu((xcoor-t*ghost+i +nx_all)%nx_all,(ycoor-t*nghost+j+ny_all)%ny_all)
-			sub_sim::u_hv(i,j)=u_hv((xcoor-t*ghost+i +nx_all)%nx_all,(ycoor-t*nghost+j+ny_all)%ny_all)
+void Central2D<Physics, Limiter>::init_smallgrid( Central2D<Physics, Limiter>& sub_sim, int s, int size_ratio ){
+	int ycoor= (s/size_ratio)*sub_sim.nx;
+	int xcoor = (s % size_ratio)*sub_sim.nx;
+	int t = sub_sim.time_steps;
+
+	for( int i=0; i < sub_sim.nx_all; ++i){
+		for( int j=0; j < sub_sim.ny_all; ++j){
+			sub_sim.u_h(i,j)=u_h((xcoor-t*nghost+i +nx_all)%nx_all,(ycoor-t*nghost+j+ny_all)%ny_all);
+			sub_sim.u_hu(i,j)=u_hu((xcoor-t*nghost+i +nx_all)%nx_all,(ycoor-t*nghost+j+ny_all)%ny_all);
+			sub_sim.u_hv(i,j)=u_hv((xcoor-t*nghost+i +nx_all)%nx_all,(ycoor-t*nghost+j+ny_all)%ny_all);
 			
 		}
 	}
@@ -822,15 +829,18 @@ void Central2D<Physics, Limiter>::init_smallgrid( &Central2D<Physics, Limiter> s
 * does not include the ghost cells of the small grid
 *
 */
-void Central2D<Physics, Limiter>::map_to_maingrid( &Central2D<Physics, Limiter> sub_sim, int s, int size_ratio ){
-	int ycoor= (s/size_ratio)*sub_sim::nx;
-	int xcoor = (s % size_ratio)*sub_sim::nx;
-	int t = sub_sim::time_steps;
-	for( int i=t*nghost; i < sub_sim::nx +t*nghost; ++i){
-		for( int j=t*nghost; j < sub_sim::nx +t*nghost; ++j){
-			u_h(xcoor+i,ycoor+j)= sub_sim::u_h(i,j)
-			u_hu(xcoor+i,ycoor+j)= sub_sim::u_hu(i,j)
-			u_hv(xcoor+i,ycoor+j)= sub_sim::u_hv(i,j)
+template <class Physics, class Limiter>
+void Central2D<Physics, Limiter>::map_to_maingrid( Central2D<Physics, Limiter>& sub_sim, int s, int size_ratio ){
+	int ycoor= (s/size_ratio)*sub_sim.nx;
+	int xcoor = (s % size_ratio)*sub_sim.nx;
+	int t = sub_sim.time_steps;
+
+
+	for( int i=0; i < sub_sim.nx; ++i){
+		for( int j=0; j < sub_sim.nx; ++j){
+			u_h(xcoor+i,ycoor+j)= sub_sim.u_h(i+t*nghost,j+t*nghost);
+			u_hu(xcoor+i,ycoor+j)= sub_sim.u_hu(i+t*nghost,j+t*nghost);
+			u_hv(xcoor+i,ycoor+j)= sub_sim.u_hv(i+t*nghost,j+t*nghost);
 			
 		}
 	}
