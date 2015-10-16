@@ -73,7 +73,7 @@ struct MinMod {
     // Limited combined slope estimate
 	// MAG: passed pointers instead of scalars, compute x derivative
 	
-    static real limdiffx(std::vector<real>& du, const std::vector<real>& u, int nx_all, int ny_all) {
+    static void limdiffx(std::vector<real>& du, const std::vector<real>& u, int nx_all, int ny_all) {
 		for (int iy = 1; iy < ny_all-1; ++iy){
 			for (int ix = 1; ix < nx_all-1; ++ix) {		
 			
@@ -87,7 +87,7 @@ struct MinMod {
 		
 	}
 	// MAG: passed pointers instead of scalars, compute y derivative
-	static real limdiffy(std::vector<real>& du, const std::vector<real>& u, int nx_all, int ny_all) {
+	static void limdiffy(std::vector<real>& du, const std::vector<real>& u, int nx_all, int ny_all) {
 		for (int iy = 1; iy < ny_all-1; ++iy){
 			for (int ix = 1; ix < nx_all-1; ++ix) {		
 			

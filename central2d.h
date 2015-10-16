@@ -480,20 +480,20 @@ template <class Physics, class Limiter>
 void Central2D<Physics, Limiter>::limited_derivs()
 {
     // x derivatives
-    limdiffx( ux_h_, u_h_, nx_all, ny_all);
-	limdiffx( ux_hu_, u_h_ , nx_all, ny_all);
-	limdiffx( ux_hv_, u_hv_ , nx_all, ny_all);
-	limdiffx( fx0_, f0_, nx_all, ny_all );
-	limdiffx( fx1_, f1_, nx_all, ny_all );
-	limdiffx( fx2_, f2_, nx_all, ny_all );
+    Limiter::limdiffx( ux_h_, u_h_, nx_all, ny_all);
+	Limiter::limdiffx( ux_hu_, u_h_ , nx_all, ny_all);
+	Limiter::limdiffx( ux_hv_, u_hv_ , nx_all, ny_all);
+	Limiter::limdiffx( fx0_, f0_, nx_all, ny_all );
+	Limiter::limdiffx( fx1_, f1_, nx_all, ny_all );
+	Limiter::limdiffx( fx2_, f2_, nx_all, ny_all );
 
     // y derivatives
-	limdiffy( uy_h_, u_h_, nx_all, ny_all );
-	limdiffy( uy_hu_, u_hu_, nx_all, ny_all );
-	limdiffy( uy_hv_, u_hv_, nx_all, ny_all );
-	limdiffy( gy0_, g0_, nx_all, ny_all );
-	limdiffy( gy1_, g1_, nx_all, ny_all );
-	limdiffy( gy2_, g2_, nx_all, ny_all );
+	Limiter::limdiffy( uy_h_, u_h_, nx_all, ny_all );
+	Limiter::limdiffy( uy_hu_, u_hu_, nx_all, ny_all );
+	Limiter::limdiffy( uy_hv_, u_hv_, nx_all, ny_all );
+	Limiter::limdiffy( gy0_, g0_, nx_all, ny_all );
+	Limiter::limdiffy( gy1_, g1_, nx_all, ny_all );
+	Limiter::limdiffy( gy2_, g2_, nx_all, ny_all );
 }
 
 
