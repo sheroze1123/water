@@ -574,7 +574,7 @@ void Central2D<Physics, Limiter>::compute_step(int io, real dt)
             uh_hv(ix, iy) -= dtcdx2 * fx2(ix, iy);
             uh_hv(ix, iy) -= dtcdy2 * gy2(ix, iy);
  	       
-        	if (!(uh_h(ix,iy)>0)){ printf("at uh comp, i:%d, j%d, h:%g, h before:%g fx0 %g, gyo %g, \n", ix,iy,uh_h(ix,iy), u_h(ix,iy), fx0(ix, iy), gy0(ix, iy)); assert(0);}
+        
 		}
     // Update the FU[0] component
     for (int iy = 1; iy < ny_all -1; ++iy)
@@ -663,7 +663,7 @@ void Central2D<Physics, Limiter>::compute_step(int io, real dt)
                     dtcdy2 * ( g0(ix,  iy+1)   - g0(ix,  iy)    +
                                g0(ix+1,iy+1)   - g0(ix+1,iy)); 
 	
-        	if (!(v_h(ix,iy)>0)){ printf("at v comp, i:%d, j%d, h:%g \n", ix,iy,v_h(ix,iy)); assert(0);}
+       
 	}
     // Corrector for hu component (finish the step)
     for (int iy = nghost-io; iy < ny_all-nghost-io; ++iy)
@@ -740,21 +740,20 @@ void Central2D<Physics, Limiter>::run(real tfinal)
     int size_ratio=10; // big/small
     int sub_size = nx/size_ratio; // size of subdomain
     int sub_number = nx*nx/sub_size/sub_size;
-    int time_steps= 4; // number of time steps done before synchronisation -- MUST BE EVEN
-    printf("sub_number is: %d \n w: %g, w/ratio: %g \n", sub_number, w, w/size_ratio);
+    int time_steps= 6; // number of time steps done before synchronisation -- MUST BE EVEN
+
     while (!done) { 
-		printf("not done");
+
         	real dt;
 		real cx, cy;
 		compute_fg_speeds(cx, cy);
-		cx = 10.0*cx; // overestimating cx and cy as we wont be recomputing it for the next #time_steps steps
-		cy=10.0*cy;
+		cx = 2.0*cx; // overestimating cx and cy as we wont be recomputing it for the next #time_steps steps
+		cy=2.0*cy;
 		dt = cfl / std::max(cx/dx, cy/dy);
 		if (t+time_steps*dt >= tfinal){ // if the next #time_steps steps bring us to the end, set dt to be 1/time_steps of that
 			dt = (tfinal-t)/time_steps; // could probably make this better by having two different dt's -- could have at most (time_steps -1) unnecessarily calls
 		}
 		#pragma omp parallel for 
-		//shared(u_h, u_hv, u_hu, maxspeed) private(s, sub_sim)\ i think this is not needed? not sure
 		for(int s=0; s < sub_number; ++s){
 			Central2D<Physics, Limiter> sub_sim(w/size_ratio, h/size_ratio, sub_size, sub_size, time_steps);// builds sub-simulation on smaller grid
 			init_smallgrid(sub_sim, s, size_ratio);
@@ -765,7 +764,9 @@ void Central2D<Physics, Limiter>::run(real tfinal)
 				sub_sim.compute_step(io%2, dt);
 			}
 			map_to_maingrid( sub_sim, s, size_ratio);
-		}
+		} 
+		
+		
 		if(t+time_steps*dt==tfinal){
 			done=true;}
 		else{t+=time_steps*dt;}
@@ -798,7 +799,6 @@ void Central2D<Physics, Limiter>::solution_check()
             hv_sum += u_hv(i,j);
             hmax = max(h, hmax);
             hmin = min(h, hmin);
-            if (!(h>0)){printf("at i:%d, j:%d , h= %g \n",i,j, h); } 
 	    assert( h > 0) ;
         }
     real cell_area = dx*dy;
@@ -833,7 +833,7 @@ void Central2D<Physics, Limiter>::init_smallgrid( Central2D<Physics, Limiter>& s
 			}else if( ycoor -t*nghost+j >= ny){
 				y=ycoor-t*nghost+j - ny;
 			}else{ y = ycoor-t*nghost+j; }	
-			if (u_h(x,y)==0){printf("init small grid fails x=%d, y=%d, for %d, %d \n",x,y,xcoor-t*nghost+i, ycoor-t*nghost+j); assert (0);}		
+			
 			sub_sim.u_h(i,j)=u_h(x,y);
 			sub_sim.u_hu(i,j)=u_hu(x,y);
 			sub_sim.u_hv(i,j)=u_hv(x,y);
