@@ -712,8 +712,8 @@ void Central2D<Physics, Limiter>::run(real tfinal)
         	real dt;
 		real cx, cy;
 		compute_fg_speeds(cx, cy);
-		cx = 2.0*cx; // overestimating cx and cy as we wont be recomputing it for the next #time_steps steps
-		cy=2.0*cy;
+		cx = 1*cx; // overestimating cx and cy as we wont be recomputing it for the next #time_steps steps
+		cy=1*cy;
 		dt = cfl / std::max(cx/dx, cy/dy);
 		if (t+time_steps*dt >= tfinal){ // if the next #time_steps steps bring us to the end, set dt to be 1/time_steps of that
 			dt = (tfinal-t)/time_steps; // could probably make this better by having two different dt's -- could have at most (time_steps -1) unnecessarily calls
