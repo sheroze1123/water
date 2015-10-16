@@ -705,7 +705,7 @@ void Central2D<Physics, Limiter>::run(real tfinal)
     int size_ratio=10; // big/small
     int sub_size = nx/size_ratio; // size of subdomain
     int sub_number = nx*nx/sub_size/sub_size;
-    int time_steps= 4; // number of time steps done before synchronisation -- MUST BE EVEN
+    int time_steps= 10; // number of time steps done before synchronisation -- MUST BE EVEN
     
     while (!done) { 
 		
