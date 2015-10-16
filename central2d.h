@@ -481,7 +481,7 @@ void Central2D<Physics, Limiter>::limited_derivs()
 {
     // x derivatives
     Limiter::limdiffx( ux_h_, u_h_, nx_all, ny_all);
-	Limiter::limdiffx( ux_hu_, u_h_ , nx_all, ny_all);
+	Limiter::limdiffx( ux_hu_, u_hu_ , nx_all, ny_all);
 	Limiter::limdiffx( ux_hv_, u_hv_ , nx_all, ny_all);
 	Limiter::limdiffx( fx0_, f0_, nx_all, ny_all );
 	Limiter::limdiffx( fx1_, f1_, nx_all, ny_all );
@@ -706,9 +706,9 @@ void Central2D<Physics, Limiter>::run(real tfinal)
     int sub_size = nx/size_ratio; // size of subdomain
     int sub_number = nx*nx/sub_size/sub_size;
     int time_steps= 4; // number of time steps done before synchronisation -- MUST BE EVEN
-    printf("sub_number is: %d \n w: %g, w/ratio: %g \n", sub_number, w, w/size_ratio);
+    
     while (!done) { 
-		printf("not done");
+		
         	real dt;
 		real cx, cy;
 		compute_fg_speeds(cx, cy);
