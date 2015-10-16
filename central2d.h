@@ -155,11 +155,11 @@ public:
     
     // Read / write elements of simulation state
     real& operator()(int i, int j) {
-        return u_h_[offset(i+nghost,j+nghost)];
+        return u_h_[offset(i+time_steps*nghost,j+time_steps*nghost)];
     }
     
     const real& operator()(int i, int j) const {
-        return u_h_[offset(i+nghost,j+nghost)];
+        return u_h_[offset(i+time_steps*nghost,j+time_steps*nghost)];
     }
     
 private:
