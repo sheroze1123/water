@@ -740,14 +740,15 @@ void Central2D<Physics, Limiter>::run(real tfinal)
     int size_ratio=10; // big/small
     int sub_size = nx/size_ratio; // size of subdomain
     int sub_number = nx*nx/sub_size/sub_size;
-    int time_steps= 6; // number of time steps done before synchronisation -- MUST BE EVEN
+    int time_steps= 10; // number of time steps done before synchronisation -- MUST BE EVEN
     printf("sub_number is: %d \n w: %g, w/ratio: %g \n", sub_number, w, w/size_ratio);
-    while (!done) {
-        real dt;
+    while (!done) { 
+		printf("not done");
+        	real dt;
 		real cx, cy;
 		compute_fg_speeds(cx, cy);
-		cx = 1.5*cx; // overestimating cx and cy as we wont be recomputing it for the next #time_steps steps
-		cy=1.5*cy;
+		cx = 1.0*cx; // overestimating cx and cy as we wont be recomputing it for the next #time_steps steps
+		cy=1.0*cy;
 		dt = cfl / std::max(cx/dx, cy/dy);
 		if (t+time_steps*dt >= tfinal){ // if the next #time_steps steps bring us to the end, set dt to be 1/time_steps of that
 			dt = (tfinal-t)/time_steps; // could probably make this better by having two different dt's -- could have at most (time_steps -1) unnecessarily calls
