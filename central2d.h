@@ -719,9 +719,8 @@ void Central2D<Physics, Limiter>::run(real tfinal)
 			dt = (tfinal-t)/time_steps; // could probably make this better by having two different dt's -- could have at most (time_steps -1) unnecessarily calls
 		}
 		#pragma omp parallel for 
-		//shared(u_h, u_hv, u_hu, maxspeed) private(s, sub_sim)\ i think this is not needed? not sure
 		for(int s=0; s < sub_number; ++s){
-			Central2D<Physics, Limiter> sub_sim(w/size_ratio, h/size_ratio, sub_size, sub_size, time_steps);// builds sub-simulation on smaller grid
+			Central2D<Physics, Limiter> sub_sim(w/size_ratio, h/size_ratio, sub_size, sub_size, time_steps+1);// builds sub-simulation on smaller grid
 			init_smallgrid(sub_sim, s, size_ratio);
 			real local_cx, local_cy;
 			for (int io = 0; io < time_steps; ++io) {
@@ -763,7 +762,6 @@ void Central2D<Physics, Limiter>::solution_check()
             hv_sum += u_hv(i,j);
             hmax = max(h, hmax);
             hmin = min(h, hmin);
-            if (!(h>0)){printf("at i:%d, j:%d , h= %g \n",i,j, h); } 
 	    assert( h > 0) ;
         }
     real cell_area = dx*dy;
@@ -798,7 +796,6 @@ void Central2D<Physics, Limiter>::init_smallgrid( Central2D<Physics, Limiter>& s
 			}else if( ycoor -t*nghost+j >= ny){
 				y=ycoor-t*nghost+j - ny;
 			}else{ y = ycoor-t*nghost+j; }	
-			if (u_h(x,y)==0){printf("init small grid fails x=%d, y=%d, for %d, %d \n",x,y,xcoor-t*nghost+i, ycoor-t*nghost+j); assert (0);}		
 			sub_sim.u_h(i,j)=u_h(x,y);
 			sub_sim.u_hu(i,j)=u_hu(x,y);
 			sub_sim.u_hv(i,j)=u_hv(x,y);
