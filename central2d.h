@@ -736,12 +736,11 @@ void Central2D<Physics, Limiter>::run(real tfinal)
     
     bool done = false;
     real t = 0;
-    int size_ratio=10; // big/small
+    int size_ratio=1; // big/small
     int sub_size = nx/size_ratio; // size of subdomain
     int sub_number = nx*nx/sub_size/sub_size;
     int time_steps= 6; // number of time steps done before synchronisation -- MUST BE EVEN
-    
-
+    printf("sub_number is: %d \n", sub_number);
     while (!done) {
         real dt;
 		real cx, cy;
