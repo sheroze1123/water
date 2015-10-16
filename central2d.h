@@ -714,17 +714,19 @@ void Central2D<Physics, Limiter>::run(real tfinal)
 		compute_fg_speeds(cx, cy);
 		cx = 2*cx; // overestimating cx and cy as we wont be recomputing it for the next #time_steps steps
 		cy=2*cy;
+		real maxc=std::max(cx,cy);
 		dt = cfl / std::max(cx/dx, cy/dy);
 		if (t+time_steps*dt >= tfinal){ // if the next #time_steps steps bring us to the end, set dt to be 1/time_steps of that
 			dt = (tfinal-t)/time_steps; // could probably make this better by having two different dt's -- could have at most (time_steps -1) unnecessarily calls
 		}
-		#pragma omp parallel for 
+	//	#pragma omp parallel for 
 		for(int s=0; s < sub_number; ++s){
-			Central2D<Physics, Limiter> sub_sim(w/size_ratio, h/size_ratio, sub_size, sub_size, time_steps+1);// builds sub-simulation on smaller grid
+			Central2D<Physics, Limiter> sub_sim(w/size_ratio, h/size_ratio, sub_size, sub_size, time_steps);// builds sub-simulation on smaller grid
 			init_smallgrid(sub_sim, s, size_ratio);
 			real local_cx, local_cy;
 			for (int io = 0; io < time_steps; ++io) {
 				sub_sim.compute_fg_speeds(local_cx, local_cy);
+				assert( (local_cx < maxc) && (local_cy < maxc)); 
 				sub_sim.limited_derivs(); 
 				sub_sim.compute_step(io%2, dt);
 			}
