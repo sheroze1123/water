@@ -559,23 +559,24 @@ void Central2D<Physics, Limiter>::compute_step(int io, real dt)
 {
     real dtcdx2 = 0.5 * dt / dx;
     real dtcdy2 = 0.5 * dt / dy;
-
+    printf("dt: %g", dt);
     // Predictor (flux values of f and g at half step)
     for (int iy = 1; iy < ny_all-1; ++iy)
         for (int ix = 1; ix < nx_all-1; ++ix) {
-			uh_h(ix,iy)=u_h(ix,iy);
+	    uh_h(ix,iy)=u_h(ix,iy);
             uh_h(ix, iy) -= dtcdx2 * fx0(ix, iy);
             uh_h(ix, iy) -= dtcdy2 * gy0(ix, iy);
 			
-			uh_hu(ix,iy)=u_hu(ix,iy);
+	    uh_hu(ix,iy)=u_hu(ix,iy);
             uh_hu(ix, iy) -= dtcdx2 * fx1(ix, iy);
             uh_hu(ix, iy) -= dtcdy2 * gy1(ix, iy);
 			
-			uh_hv(ix,iy)=u_hv(ix,iy);			
+	    uh_hv(ix,iy)=u_hv(ix,iy);			
             uh_hv(ix, iy) -= dtcdx2 * fx2(ix, iy);
             uh_hv(ix, iy) -= dtcdy2 * gy2(ix, iy);
-        }
-
+ 	       
+        	if (!(uh_h(ix,iy)>0)){ printf("at uh comp, i:%d, j%d, h:%g, h before:%g fx0 %g, gyo %g, \n", ix,iy,uh_h(ix,iy), u_h(ix,iy), fx0(ix, iy), gy0(ix, iy)); assert(0);}
+		}
     // Update the FU[0] component
     for (int iy = 1; iy < ny_all -1; ++iy)
         for (int ix = 1; ix < nx_all-1; ++ix) {
@@ -661,9 +662,10 @@ void Central2D<Physics, Limiter>::compute_step(int io, real dt)
                     dtcdx2 * ( f0(ix+1,iy  )   - f0(ix,iy)      +
                                f0(ix+1,iy+1)   - f0(ix,iy+1))   -
                     dtcdy2 * ( g0(ix,  iy+1)   - g0(ix,  iy)    +
-                               g0(ix+1,iy+1)   - g0(ix+1,iy));
-        }
-
+                               g0(ix+1,iy+1)   - g0(ix+1,iy)); 
+	
+        	if (!(v_h(ix,iy)>0)){ printf("at v comp, i:%d, j%d, h:%g \n", ix,iy,v_h(ix,iy)); assert(0);}
+	}
     // Corrector for hu component (finish the step)
     for (int iy = nghost-io; iy < ny+nghost-io; ++iy)
         for (int ix = nghost-io; ix < nx+nghost-io; ++ix) {
@@ -754,9 +756,11 @@ void Central2D<Physics, Limiter>::run(real tfinal)
 		#pragma omp parallel for 
 		//shared(u_h, u_hv, u_hu, maxspeed) private(s, sub_sim)\ i think this is not needed? not sure
 		for(int s=0; s < sub_number; ++s){
-			Central2D<Physics, Limiter> sub_sim(size_ratio*w, size_ratio*h, sub_size, sub_size, time_steps);// builds sub-simulation on smaller grid
+			Central2D<Physics, Limiter> sub_sim(w/size_ratio, h/size_ratio, sub_size, sub_size, time_steps);// builds sub-simulation on smaller grid
 			init_smallgrid(sub_sim, s, size_ratio);
+			real local_cx, local_cy;
 			for (int io = 0; io < time_steps; ++io) {
+				sub_sim.compute_fg_speeds(local_cx, local_cy);
 				sub_sim.limited_derivs(); 
 				sub_sim.compute_step(io%2, dt);
 			}
@@ -794,7 +798,8 @@ void Central2D<Physics, Limiter>::solution_check()
             hv_sum += u_hv(i,j);
             hmax = max(h, hmax);
             hmin = min(h, hmin);
-            assert( h > 0) ;
+            if (!(h>0)){printf("at i:%d, j:%d , h= %g \n",i,j, h); } 
+	    assert( h > 0) ;
         }
     real cell_area = dx*dy;
     h_sum *= cell_area;
@@ -813,12 +818,24 @@ void Central2D<Physics, Limiter>::init_smallgrid( Central2D<Physics, Limiter>& s
 	int ycoor= (s/size_ratio)*sub_sim.nx;
 	int xcoor = (s % size_ratio)*sub_sim.nx;
 	int t = sub_sim.time_steps;
-
+	int x,y;
 	for( int i=0; i < sub_sim.nx_all; ++i){
 		for( int j=0; j < sub_sim.ny_all; ++j){
-			sub_sim.u_h(i,j)=u_h((xcoor-t*nghost+i +nx_all)%nx_all,(ycoor-t*nghost+j+ny_all)%ny_all);
-			sub_sim.u_hu(i,j)=u_hu((xcoor-t*nghost+i +nx_all)%nx_all,(ycoor-t*nghost+j+ny_all)%ny_all);
-			sub_sim.u_hv(i,j)=u_hv((xcoor-t*nghost+i +nx_all)%nx_all,(ycoor-t*nghost+j+ny_all)%ny_all);
+			if( xcoor -t*nghost+i < 0){
+				x=nx+(xcoor-t*nghost+i);
+			}else if( xcoor -t*nghost+i >= nx){
+				x=xcoor-t*nghost+i - nx;
+			}else{ x = xcoor-t*nghost+i; }	
+			
+			if( ycoor -t*nghost+j < 0){
+				y=ny+(ycoor-t*nghost+j);
+			}else if( ycoor -t*nghost+j >= ny){
+				y=ycoor-t*nghost+j - ny;
+			}else{ y = ycoor-t*nghost+j; }	
+			if (u_h(x,y)==0){printf("init small grid fails x=%d, y=%d, for %d, %d \n",x,y,xcoor-t*nghost+i, ycoor-t*nghost+j); assert (0);}		
+			sub_sim.u_h(i,j)=u_h(x,y);
+			sub_sim.u_hu(i,j)=u_hu(x,y);
+			sub_sim.u_hv(i,j)=u_hv(x,y);
 			
 		}
 	}
