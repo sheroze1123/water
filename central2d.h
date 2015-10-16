@@ -559,7 +559,7 @@ void Central2D<Physics, Limiter>::compute_step(int io, real dt)
 {
     real dtcdx2 = 0.5 * dt / dx;
     real dtcdy2 = 0.5 * dt / dy;
-    printf("dt: %g", dt);
+   
     // Predictor (flux values of f and g at half step)
     for (int iy = 1; iy < ny_all-1; ++iy)
         for (int ix = 1; ix < nx_all-1; ++ix) {
@@ -650,8 +650,8 @@ void Central2D<Physics, Limiter>::compute_step(int io, real dt)
         }
 
     // Corrector for h component (finish the step)
-    for (int iy = nghost-io; iy < ny+nghost-io; ++iy)
-        for (int ix = nghost-io; ix < nx+nghost-io; ++ix) {
+    for (int iy = nghost-io; iy < ny_all-nghost-io; ++iy)
+        for (int ix = nghost-io; ix < nx_all-nghost-io; ++ix) {
                 v_h(ix,iy) =
                     0.2500 * ( u_h(ix,  iy) + u_h(ix+1,iy)      +
                                u_h(ix,iy+1) + u_h(ix+1,iy+1))   -
@@ -667,8 +667,8 @@ void Central2D<Physics, Limiter>::compute_step(int io, real dt)
         	if (!(v_h(ix,iy)>0)){ printf("at v comp, i:%d, j%d, h:%g \n", ix,iy,v_h(ix,iy)); assert(0);}
 	}
     // Corrector for hu component (finish the step)
-    for (int iy = nghost-io; iy < ny+nghost-io; ++iy)
-        for (int ix = nghost-io; ix < nx+nghost-io; ++ix) {
+    for (int iy = nghost-io; iy < ny_all-nghost-io; ++iy)
+        for (int ix = nghost-io; ix < nx_all-nghost-io; ++ix) {
                 v_hu(ix,iy) =
                     0.2500 * ( u_hu(ix,  iy) + u_hu(ix+1,iy)      +
                                u_hu(ix,iy+1) + u_hu(ix+1,iy+1))   -
@@ -683,8 +683,8 @@ void Central2D<Physics, Limiter>::compute_step(int io, real dt)
         }
 
     // Corrector for hv component (finish the step)
-    for (int iy = nghost-io; iy < ny+nghost-io; ++iy)
-        for (int ix = nghost-io; ix < nx+nghost-io; ++ix) {
+    for (int iy = nghost-io; iy < ny_all-nghost-io; ++iy)
+        for (int ix = nghost-io; ix < nx_all-nghost-io; ++ix) {
                 v_hv(ix,iy) =
                     0.2500 * ( u_hv(ix,  iy) + u_hv(ix+1,iy)      +
                                u_hv(ix,iy+1) + u_hv(ix+1,iy+1))   -
@@ -699,18 +699,18 @@ void Central2D<Physics, Limiter>::compute_step(int io, real dt)
         }
 
     // Copy from v storage back to main grid
-    for (int j = nghost; j < ny+nghost; ++j){
-        for (int i = nghost; i < nx+nghost; ++i){
+    for (int j = nghost; j < ny_all-nghost; ++j){
+        for (int i = nghost; i < nx_all-nghost; ++i){
             u_h(i,j) = v_h(i-io,j-io);
         }
     }
-    for (int j = nghost; j < ny+nghost; ++j){
-        for (int i = nghost; i < nx+nghost; ++i){
+    for (int j = nghost; j < ny_all-nghost; ++j){
+        for (int i = nghost; i < nx_all-nghost; ++i){
             u_hu(i,j) = v_hu(i-io,j-io);
         }
     }
-    for (int j = nghost; j < ny+nghost; ++j){
-        for (int i = nghost; i < nx+nghost; ++i){
+    for (int j = nghost; j < ny_all-nghost; ++j){
+        for (int i = nghost; i < nx_all-nghost; ++i){
             u_hv(i,j) = v_hv(i-io,j-io);
         }
     }
@@ -753,7 +753,7 @@ void Central2D<Physics, Limiter>::run(real tfinal)
 		if (t+time_steps*dt >= tfinal){ // if the next #time_steps steps bring us to the end, set dt to be 1/time_steps of that
 			dt = (tfinal-t)/time_steps; // could probably make this better by having two different dt's -- could have at most (time_steps -1) unnecessarily calls
 		}
-		#pragma omp parallel for 
+		//#pragma omp parallel for 
 		//shared(u_h, u_hv, u_hu, maxspeed) private(s, sub_sim)\ i think this is not needed? not sure
 		for(int s=0; s < sub_number; ++s){
 			Central2D<Physics, Limiter> sub_sim(w/size_ratio, h/size_ratio, sub_size, sub_size, time_steps);// builds sub-simulation on smaller grid
@@ -819,6 +819,7 @@ void Central2D<Physics, Limiter>::init_smallgrid( Central2D<Physics, Limiter>& s
 	int xcoor = (s % size_ratio)*sub_sim.nx;
 	int t = sub_sim.time_steps;
 	int x,y;
+	printf("small grid: %d, smallgrid+ ghost: %d \n", sub_sim.nx, sub_sim.nx_all);
 	for( int i=0; i < sub_sim.nx_all; ++i){
 		for( int j=0; j < sub_sim.ny_all; ++j){
 			if( xcoor -t*nghost+i < 0){
@@ -836,7 +837,7 @@ void Central2D<Physics, Limiter>::init_smallgrid( Central2D<Physics, Limiter>& s
 			sub_sim.u_h(i,j)=u_h(x,y);
 			sub_sim.u_hu(i,j)=u_hu(x,y);
 			sub_sim.u_hv(i,j)=u_hv(x,y);
-			
+	
 		}
 	}
 	
