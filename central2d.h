@@ -164,8 +164,8 @@ public:
     
 private:
     static constexpr int nghost = 3;   // Number of ghost cells
-    const int w; //added those as variables of object as we need to pass them to children
-    const int h;
+    const real w; //added those as variables of object as we need to pass them to children
+    const real h;
     const int time_steps;
     const int nx, ny;         // Number of (non-ghost) cells in x/y
     const int nx_all, ny_all; // Total cells in x/y (including ghost)
@@ -559,7 +559,6 @@ void Central2D<Physics, Limiter>::compute_step(int io, real dt)
 {
     real dtcdx2 = 0.5 * dt / dx;
     real dtcdy2 = 0.5 * dt / dy;
-   
     // Predictor (flux values of f and g at half step)
     for (int iy = 1; iy < ny_all-1; ++iy)
         for (int ix = 1; ix < nx_all-1; ++ix) {
@@ -738,11 +737,11 @@ void Central2D<Physics, Limiter>::run(real tfinal)
     
     bool done = false;
     real t = 0;
-    int size_ratio=1; // big/small
+    int size_ratio=10; // big/small
     int sub_size = nx/size_ratio; // size of subdomain
     int sub_number = nx*nx/sub_size/sub_size;
     int time_steps= 6; // number of time steps done before synchronisation -- MUST BE EVEN
-    printf("sub_number is: %d \n", sub_number);
+    printf("sub_number is: %d \n w: %g, w/ratio: %g \n", sub_number, w, w/size_ratio);
     while (!done) {
         real dt;
 		real cx, cy;
@@ -753,7 +752,7 @@ void Central2D<Physics, Limiter>::run(real tfinal)
 		if (t+time_steps*dt >= tfinal){ // if the next #time_steps steps bring us to the end, set dt to be 1/time_steps of that
 			dt = (tfinal-t)/time_steps; // could probably make this better by having two different dt's -- could have at most (time_steps -1) unnecessarily calls
 		}
-		//#pragma omp parallel for 
+		#pragma omp parallel for 
 		//shared(u_h, u_hv, u_hu, maxspeed) private(s, sub_sim)\ i think this is not needed? not sure
 		for(int s=0; s < sub_number; ++s){
 			Central2D<Physics, Limiter> sub_sim(w/size_ratio, h/size_ratio, sub_size, sub_size, time_steps);// builds sub-simulation on smaller grid
@@ -819,7 +818,7 @@ void Central2D<Physics, Limiter>::init_smallgrid( Central2D<Physics, Limiter>& s
 	int xcoor = (s % size_ratio)*sub_sim.nx;
 	int t = sub_sim.time_steps;
 	int x,y;
-	printf("small grid: %d, smallgrid+ ghost: %d \n", sub_sim.nx, sub_sim.nx_all);
+
 	for( int i=0; i < sub_sim.nx_all; ++i){
 		for( int j=0; j < sub_sim.ny_all; ++j){
 			if( xcoor -t*nghost+i < 0){

@@ -205,7 +205,7 @@ int main(int argc, char** argv)
 
     printf("starting\n");
     Sim sim(width,width, nx,nx, 0); // no need for ghost cells in the main grid
-    printf("done with declare\n");
+    
     SimViz<Sim> viz(fname.c_str(), sim);
     sim.init(icfun1, icfun2, icfun3);
     sim.solution_check();
