@@ -59,6 +59,7 @@
 
 template <class real>
 struct MinMod {
+//    typedef typename  std::vector<real>  vec;	
     static constexpr real theta = 2.0;
 
     // Branch-free computation of minmod of two numbers
@@ -68,14 +69,39 @@ struct MinMod {
                  copysign((real) 0.5, b)) *
                 min( abs(a), abs(b) ));
     }
-
+	////////////////!!!! NEED TO PASS NXALL NYALL
     // Limited combined slope estimate
-    static real limdiff(real um, real u0, real up) {
-        real du1 = u0-um;         // Difference to left
-        real du2 = up-u0;         // Difference to right
-        real duc = 0.5*(du1+du2); // Centered difference
-        return xmin( theta*xmin(du1, du2), duc );
-    }
+	// MAG: passed pointers instead of scalars, compute x derivative
+	
+    static real limdiffx(std::vector<real>& du, const std::vector<real>& u, int nx_all, int ny_all) {
+		for (int iy = 1; iy < ny_all-1; ++iy){
+			for (int ix = 1; ix < nx_all-1; ++ix) {		
+			
+				real du1 = u[iy*nx_all+ix] - u[iy*nx_all+(ix-1)];         // Difference to left (u0 - um)
+				real du2 = u[iy*nx_all+(ix+1)] - u[iy*nx_all+ix];          // Difference to right
+				real duc = 0.5*(du1+du2); // Centered difference
+				du[iy*nx_all+ix]= xmin( theta*xmin(du1, du2), duc ); // MAG: might want to inline this?
+				
+			}
+		}
+		
+	}
+	// MAG: passed pointers instead of scalars, compute y derivative
+	static real limdiffy(std::vector<real>& du, const std::vector<real>& u, int nx_all, int ny_all) {
+		for (int iy = 1; iy < ny_all-1; ++iy){
+			for (int ix = 1; ix < nx_all-1; ++ix) {		
+			
+				real du1 = u[iy*nx_all+ix] - u[(iy-1)*nx_all+ix];         // Difference to left (u0 - um)
+				real du2 = u[(iy+1)*nx_all+ix] - u[iy*nx_all+ix];          // Difference to right
+				real duc = 0.5*(du1+du2); // Centered difference
+				du[iy*nx_all+ix]= xmin( theta*xmin(du1, du2), duc ); // MAG: might want to inline this?
+				
+			}
+		}
+	
+	}
+	
+	
 };
 
 //ldoc off
