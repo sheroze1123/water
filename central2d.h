@@ -721,7 +721,7 @@ void Central2D<Physics, Limiter>::run(real tfinal)
 		}
 	//	#pragma omp parallel for 
 		for(int s=0; s < sub_number; ++s){
-			Central2D<Physics, Limiter> sub_sim(w/size_ratio, h/size_ratio, sub_size, sub_size, time_steps);// builds sub-simulation on smaller grid
+			Central2D<Physics, Limiter> sub_sim(w/size_ratio, h/size_ratio, sub_size, sub_size, time_steps+10);// builds sub-simulation on smaller grid
 			init_smallgrid(sub_sim, s, size_ratio);
 			real local_cx, local_cy;
 			for (int io = 0; io < time_steps; ++io) {
