@@ -539,7 +539,7 @@ void Central2D<Physics, Limiter>::compute_step(int io, real dt)
             uh_hv(ix, iy) -= dtcdx2 * fx2(ix, iy);
             uh_hv(ix, iy) -= dtcdy2 * gy2(ix, iy);
  	       
-        	if (!(uh_h(ix,iy)>0)){ printf("at uh comp, i:%d, j%d, h:%g, h before:%g fx0 %g, gyo %g, \n", ix,iy,uh_h(ix,iy), u_h(ix,iy), fx0(ix, iy), gy0(ix, iy)); assert(0);}
+        
 		}
     // Update the FU[0] component
     for (int iy = 1; iy < ny_all -1; ++iy)
@@ -628,7 +628,7 @@ void Central2D<Physics, Limiter>::compute_step(int io, real dt)
                     dtcdy2 * ( g0(ix,  iy+1)   - g0(ix,  iy)    +
                                g0(ix+1,iy+1)   - g0(ix+1,iy)); 
 	
-        	if (!(v_h(ix,iy)>0)){ printf("at v comp, i:%d, j%d, h:%g \n", ix,iy,v_h(ix,iy)); assert(0);}
+
 	}
     // Corrector for hu component (finish the step)
     for (int iy = nghost-io; iy < ny_all-nghost-io; ++iy)
@@ -712,16 +712,16 @@ void Central2D<Physics, Limiter>::run(real tfinal)
         	real dt;
 		real cx, cy;
 		compute_fg_speeds(cx, cy);
-		cx = 2*cx; // overestimating cx and cy as we wont be recomputing it for the next #time_steps steps
-		cy=2*cy;
+		cx = 10*cx; // overestimating cx and cy as we wont be recomputing it for the next #time_steps steps
+		cy=10*cy;
 		real maxc=std::max(cx,cy);
 		dt = cfl / std::max(cx/dx, cy/dy);
 		if (t+time_steps*dt >= tfinal){ // if the next #time_steps steps bring us to the end, set dt to be 1/time_steps of that
 			dt = (tfinal-t)/time_steps; // could probably make this better by having two different dt's -- could have at most (time_steps -1) unnecessarily calls
 		}
-	//	#pragma omp parallel for 
+		#pragma omp parallel for 
 		for(int s=0; s < sub_number; ++s){
-			Central2D<Physics, Limiter> sub_sim(w/size_ratio, h/size_ratio, sub_size, sub_size, time_steps+10);// builds sub-simulation on smaller grid
+			Central2D<Physics, Limiter> sub_sim(w/size_ratio, h/size_ratio, sub_size, sub_size, time_steps);// builds sub-simulation on smaller grid
 			init_smallgrid(sub_sim, s, size_ratio);
 			real local_cx, local_cy;
 			for (int io = 0; io < time_steps; ++io) {
