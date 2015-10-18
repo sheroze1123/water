@@ -549,7 +549,7 @@ void Central2D<Physics, Limiter>::compute_step(int io, real dt)
  * at the end lives on the main grid instead of the staggered grid. 
  */
 
-template <class Physics, class Limiter>
+
 template <class Physics, class Limiter>
 void Central2D<Physics, Limiter>::run(real tfinal)
 {
@@ -567,8 +567,8 @@ void Central2D<Physics, Limiter>::run(real tfinal)
         	real dt;
 		real cx, cy;
 		compute_fg_speeds(cx, cy);
-		cx = 1.5*cx; // overestimating cx and cy as we wont be recomputing it for the next #time_steps steps
-		cy=1.5*cy;
+		cx = 2*cx; // overestimating cx and cy as we wont be recomputing it for the next #time_steps steps
+		cy=2*cy;
 		real maxc=std::max(cx,cy);
 		dt = cfl / std::max(cx/dx, cy/dy);
 		if (t+time_steps*dt >= tfinal){ // if the next #time_steps steps bring us to the end, set dt to be 1/time_steps of that
@@ -582,7 +582,9 @@ void Central2D<Physics, Limiter>::run(real tfinal)
 			for (int io = 0; io < time_steps; ++io) {
 
 				sub_sim.compute_fg_speeds(local_cx, local_cy);
-				assert( (local_cx < maxc) && (local_cy < maxc)); 
+				if (!((local_cx < maxc) && (local_cy< maxc))){ 
+					printf("cx: %g, local_cx %g, cy %g, local_cy %g \n",cx,local_cx, cy, local_cy);}
+	//			assert( (local_cx < maxc) && (local_cy < maxc)); 
 				sub_sim.limited_derivs(); 
 				sub_sim.compute_step(io%2, dt);
 
