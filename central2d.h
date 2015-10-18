@@ -521,7 +521,7 @@ void Central2D<Physics, Limiter>::limited_derivs()
 
 template <class Physics, class Limiter>
 void Central2D<Physics, Limiter>::compute_step(int io, real dt)
-{
+{ 
     real dtcdx2 = 0.5 * dt / dx;
     real dtcdy2 = 0.5 * dt / dy;
     // Predictor (flux values of f and g at half step)
@@ -614,8 +614,8 @@ void Central2D<Physics, Limiter>::compute_step(int io, real dt)
         }
 
     // Corrector for h component (finish the step)
-    for (int iy = nghost-io; iy < ny_all-nghost-io; ++iy)
-        for (int ix = nghost-io; ix < nx_all-nghost-io; ++ix) {
+    for (int iy = nghost-io; iy < ny_all-(nghost-io); ++iy)
+        for (int ix = nghost-io; ix < nx_all-(nghost-io); ++ix) {
                 v_h(ix,iy) =
                     0.2500 * ( u_h(ix,  iy) + u_h(ix+1,iy)      +
                                u_h(ix,iy+1) + u_h(ix+1,iy+1))   -
@@ -631,8 +631,8 @@ void Central2D<Physics, Limiter>::compute_step(int io, real dt)
 
 	}
     // Corrector for hu component (finish the step)
-    for (int iy = nghost-io; iy < ny_all-nghost-io; ++iy)
-        for (int ix = nghost-io; ix < nx_all-nghost-io; ++ix) {
+    for (int iy = nghost-io; iy < ny_all-(nghost-io); ++iy)
+        for (int ix = nghost-io; ix < nx_all-(nghost-io); ++ix) {
                 v_hu(ix,iy) =
                     0.2500 * ( u_hu(ix,  iy) + u_hu(ix+1,iy)      +
                                u_hu(ix,iy+1) + u_hu(ix+1,iy+1))   -
@@ -647,8 +647,8 @@ void Central2D<Physics, Limiter>::compute_step(int io, real dt)
         }
 
     // Corrector for hv component (finish the step)
-    for (int iy = nghost-io; iy < ny_all-nghost-io; ++iy)
-        for (int ix = nghost-io; ix < nx_all-nghost-io; ++ix) {
+    for (int iy = nghost-io; iy < ny_all-(nghost-io); ++iy)
+        for (int ix = nghost-io; ix < nx_all-(nghost-io); ++ix) {
                 v_hv(ix,iy) =
                     0.2500 * ( u_hv(ix,  iy) + u_hv(ix+1,iy)      +
                                u_hv(ix,iy+1) + u_hv(ix+1,iy+1))   -
@@ -706,7 +706,7 @@ void Central2D<Physics, Limiter>::run(real tfinal)
     int sub_size = nx/size_ratio; // size of subdomain
     int sub_number = nx*nx/sub_size/sub_size;
     int time_steps= 10; // number of time steps done before synchronisation -- MUST BE EVEN
-    
+    printf("MAIN dx: %g dy: %g \n", dx, dy);
     while (!done) { 
 		
         	real dt;
@@ -722,17 +722,17 @@ void Central2D<Physics, Limiter>::run(real tfinal)
 		#pragma omp parallel for 
 		for(int s=0; s < sub_number; ++s){
 			Central2D<Physics, Limiter> sub_sim(w/size_ratio, h/size_ratio, sub_size, sub_size, time_steps);// builds sub-simulation on smaller grid
-//			init_smallgrid(sub_sim, s, size_ratio);
+			init_smallgrid(sub_sim, s, size_ratio);
 			real local_cx, local_cy;
 			for (int io = 0; io < time_steps; ++io) {
-				init_smallgrid(sub_sim, s, size_ratio);	
+
 				sub_sim.compute_fg_speeds(local_cx, local_cy);
 				assert( (local_cx < maxc) && (local_cy < maxc)); 
 				sub_sim.limited_derivs(); 
 				sub_sim.compute_step(io%2, dt);
-				map_to_maingrid(sub_sim,s,size_ratio);
+
 			}
-//			map_to_maingrid( sub_sim, s, size_ratio);
+			map_to_maingrid( sub_sim, s, size_ratio);
 		}
 		if(t+time_steps*dt==tfinal){
 			done=true;}
