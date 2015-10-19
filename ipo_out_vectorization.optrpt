@@ -1,0 +1,1013 @@
+
+Begin optimization report for: main(int, char **)
+
+    Report from: Vector optimizations [vec]
+
+
+LOOP BEGIN at central2d.h(284,9) inlined into driver.cc(208,9)
+   remark #15523: loop was not vectorized: cannot compute loop iteration count before executing the loop.
+LOOP END
+
+LOOP BEGIN at central2d.h(289,9) inlined into driver.cc(208,9)
+   remark #15523: loop was not vectorized: cannot compute loop iteration count before executing the loop.
+LOOP END
+
+LOOP BEGIN at central2d.h(294,9) inlined into driver.cc(208,9)
+   remark #15523: loop was not vectorized: cannot compute loop iteration count before executing the loop.
+LOOP END
+
+LOOP BEGIN at central2d.h(582,9) inlined into driver.cc(209,9)
+   remark #15520: loop was not vectorized: loop with early exits cannot be vectorized unless it meets search loop idiom criteria
+LOOP END
+
+LOOP BEGIN at meshio.h(59,37) inlined into driver.cc(210,9)
+   remark #15523: loop was not vectorized: cannot compute loop iteration count before executing the loop.
+
+   LOOP BEGIN at meshio.h(60,41) inlined into driver.cc(210,9)
+      remark #15523: loop was not vectorized: cannot compute loop iteration count before executing the loop.
+   LOOP END
+LOOP END
+
+LOOP BEGIN at central2d.h(542,5) inlined into driver.cc(218,13)
+   remark #15523: loop was not vectorized: cannot compute loop iteration count before executing the loop.
+
+   LOOP BEGIN at central2d.h(544,9) inlined into driver.cc(218,13)
+      remark #15382: vectorization support: call to function Central2D<Shallow2D, MinMod<Shallow2D::real, Shallow2D::vec>>::apply_periodic(Central2D<Shallow2D, MinMod<Shallow2D::real, Shallow2D::vec>> *) cannot be vectorized   [ central2d.h(546,13) ]
+      remark #15382: vectorization support: call to function Central2D<Shallow2D, MinMod<Shallow2D::real, Shallow2D::vec>>::compute_fg_speeds(Central2D<Shallow2D, MinMod<Shallow2D::real, Shallow2D::vec>> *, Central2D<Shallow2D, MinMod<Shallow2D::real, Shallow2D::vec>>::real &, Central2D<Shallow2D, MinMod<Shallow2D::real, Shallow2D::vec>>::real &) cannot be vectorized   [ central2d.h(547,13) ]
+      remark #15382: vectorization support: call to function Central2D<Shallow2D, MinMod<Shallow2D::real, Shallow2D::vec>>::limited_derivs(Central2D<Shallow2D, MinMod<Shallow2D::real, Shallow2D::vec>> *) cannot be vectorized   [ central2d.h(548,13) ]
+      remark #15382: vectorization support: call to function Central2D<Shallow2D, MinMod<Shallow2D::real, Shallow2D::vec>>::compute_step(Central2D<Shallow2D, MinMod<Shallow2D::real, Shallow2D::vec>> *, int, Central2D<Shallow2D, MinMod<Shallow2D::real, Shallow2D::vec>>::real) cannot be vectorized   [ central2d.h(556,13) ]
+      remark #15344: loop was not vectorized: vector dependence prevents vectorization
+   LOOP END
+LOOP END
+
+LOOP BEGIN at central2d.h(582,9) inlined into driver.cc(226,13)
+   remark #15520: loop was not vectorized: loop with early exits cannot be vectorized unless it meets search loop idiom criteria
+LOOP END
+
+LOOP BEGIN at meshio.h(59,37) inlined into driver.cc(227,13)
+   remark #15523: loop was not vectorized: cannot compute loop iteration count before executing the loop.
+
+   LOOP BEGIN at meshio.h(60,41) inlined into driver.cc(227,13)
+      remark #15523: loop was not vectorized: cannot compute loop iteration count before executing the loop.
+   LOOP END
+LOOP END
+
+
+Non-optimizable loops:
+
+
+LOOP BEGIN at driver.cc(155,5)
+   remark #15341: loop was not vectorized: nonstandard loop is not a vectorization candidate
+LOOP END
+
+LOOP BEGIN at central2d.h(283,5) inlined into driver.cc(208,9)
+   remark #15341: loop was not vectorized: nonstandard loop is not a vectorization candidate
+LOOP END
+
+LOOP BEGIN at central2d.h(288,5) inlined into driver.cc(208,9)
+   remark #15341: loop was not vectorized: nonstandard loop is not a vectorization candidate
+LOOP END
+
+LOOP BEGIN at central2d.h(293,5) inlined into driver.cc(208,9)
+   remark #15341: loop was not vectorized: nonstandard loop is not a vectorization candidate
+LOOP END
+
+LOOP BEGIN at central2d.h(581,5) inlined into driver.cc(209,9)
+   remark #15341: loop was not vectorized: nonstandard loop is not a vectorization candidate
+LOOP END
+
+LOOP BEGIN at driver.cc(215,5)
+   remark #15536: loop was not vectorized: inner loop throttling prevents vectorization of this outer loop. Refer to inner loop message for more details.
+
+   LOOP BEGIN at central2d.h(581,5) inlined into driver.cc(226,13)
+      remark #15341: loop was not vectorized: nonstandard loop is not a vectorization candidate
+   LOOP END
+LOOP END
+===========================================================================
+
+Begin optimization report for: Central2D<Shallow2D, MinMod<Shallow2D::real, Shallow2D::vec>>::compute_step(Central2D<Shallow2D, MinMod<Shallow2D::real, Shallow2D::vec>> *, int, Central2D<Shallow2D, MinMod<Shallow2D::real, Shallow2D::vec>>::real)
+
+    Report from: Vector optimizations [vec]
+
+
+LOOP BEGIN at central2d.h(437,5)
+   remark #15523: loop was not vectorized: cannot compute loop iteration count before executing the loop.
+
+   LOOP BEGIN at central2d.h(438,9)
+      remark #15523: loop was not vectorized: cannot compute loop iteration count before executing the loop.
+   LOOP END
+LOOP END
+
+LOOP BEGIN at shallow2d.h(100,9) inlined into central2d.h(453,5)
+   remark #15389: vectorization support: reference u_h has unaligned access   [ shallow2d.h(102,29) ]
+   remark #15389: vectorization support: reference u_hu has unaligned access   [ shallow2d.h(103,31) ]
+   remark #15389: vectorization support: reference u_hv has unaligned access   [ shallow2d.h(104,31) ]
+   remark #15389: vectorization support: reference f0 has unaligned access   [ shallow2d.h(105,19) ]
+   remark #15389: vectorization support: reference g0 has unaligned access   [ shallow2d.h(106,19) ]
+   remark #15389: vectorization support: reference f1 has unaligned access   [ shallow2d.h(107,19) ]
+   remark #15389: vectorization support: reference f2 has unaligned access   [ shallow2d.h(108,19) ]
+   remark #15389: vectorization support: reference g1 has unaligned access   [ shallow2d.h(109,19) ]
+   remark #15389: vectorization support: reference g2 has unaligned access   [ shallow2d.h(110,19) ]
+   remark #15381: vectorization support: unaligned access used inside loop body
+   remark #15301: SIMD LOOP WAS VECTORIZED
+   remark #15450: unmasked unaligned unit stride loads: 3 
+   remark #15451: unmasked unaligned unit stride stores: 6 
+   remark #15475: --- begin vector loop cost summary ---
+   remark #15476: scalar loop cost: 209 
+   remark #15477: vector loop cost: 28.620 
+   remark #15478: estimated potential speedup: 6.700 
+   remark #15479: lightweight vector operations: 72 
+   remark #15487: type converts: 8 
+   remark #15488: --- end vector loop cost summary ---
+
+   LOOP BEGIN at shallow2d.h(101,13) inlined into central2d.h(453,5)
+      remark #25460: No loop optimizations reported
+   LOOP END
+LOOP END
+
+LOOP BEGIN at shallow2d.h(100,9) inlined into central2d.h(453,5)
+<Remainder>
+   remark #15389: vectorization support: reference u_h has unaligned access   [ shallow2d.h(102,29) ]
+   remark #15389: vectorization support: reference u_hu has unaligned access   [ shallow2d.h(103,31) ]
+   remark #15389: vectorization support: reference u_hv has unaligned access   [ shallow2d.h(104,31) ]
+   remark #15389: vectorization support: reference f0 has unaligned access   [ shallow2d.h(105,19) ]
+   remark #15389: vectorization support: reference g0 has unaligned access   [ shallow2d.h(106,19) ]
+   remark #15389: vectorization support: reference f1 has unaligned access   [ shallow2d.h(107,19) ]
+   remark #15389: vectorization support: reference f2 has unaligned access   [ shallow2d.h(108,19) ]
+   remark #15389: vectorization support: reference g1 has unaligned access   [ shallow2d.h(109,19) ]
+   remark #15389: vectorization support: reference g2 has unaligned access   [ shallow2d.h(110,19) ]
+   remark #15381: vectorization support: unaligned access used inside loop body
+   remark #15301: REMAINDER LOOP WAS VECTORIZED
+
+   LOOP BEGIN at shallow2d.h(101,13) inlined into central2d.h(453,5)
+      remark #25460: No loop optimizations reported
+   LOOP END
+LOOP END
+
+LOOP BEGIN at shallow2d.h(100,9) inlined into central2d.h(453,5)
+<Remainder>
+
+   LOOP BEGIN at shallow2d.h(101,13) inlined into central2d.h(453,5)
+      remark #25460: No loop optimizations reported
+   LOOP END
+LOOP END
+
+LOOP BEGIN at central2d.h(455,5)
+   remark #15523: loop was not vectorized: cannot compute loop iteration count before executing the loop.
+
+   LOOP BEGIN at central2d.h(456,9)
+      remark #15523: loop was not vectorized: cannot compute loop iteration count before executing the loop.
+   LOOP END
+LOOP END
+
+LOOP BEGIN at central2d.h(471,5)
+   remark #15523: loop was not vectorized: cannot compute loop iteration count before executing the loop.
+
+   LOOP BEGIN at central2d.h(472,9)
+      remark #15523: loop was not vectorized: cannot compute loop iteration count before executing the loop.
+   LOOP END
+LOOP END
+
+LOOP BEGIN at central2d.h(487,5)
+   remark #15523: loop was not vectorized: cannot compute loop iteration count before executing the loop.
+
+   LOOP BEGIN at central2d.h(488,9)
+      remark #15523: loop was not vectorized: cannot compute loop iteration count before executing the loop.
+   LOOP END
+LOOP END
+
+LOOP BEGIN at central2d.h(503,9)
+   remark #15523: loop was not vectorized: cannot compute loop iteration count before executing the loop.
+
+   LOOP BEGIN at central2d.h(504,13)
+      remark #15523: loop was not vectorized: cannot compute loop iteration count before executing the loop.
+   LOOP END
+LOOP END
+
+LOOP BEGIN at central2d.h(509,9)
+   remark #15523: loop was not vectorized: cannot compute loop iteration count before executing the loop.
+
+   LOOP BEGIN at central2d.h(510,13)
+      remark #15523: loop was not vectorized: cannot compute loop iteration count before executing the loop.
+   LOOP END
+LOOP END
+
+LOOP BEGIN at central2d.h(515,9)
+   remark #15523: loop was not vectorized: cannot compute loop iteration count before executing the loop.
+
+   LOOP BEGIN at central2d.h(516,13)
+      remark #15523: loop was not vectorized: cannot compute loop iteration count before executing the loop.
+   LOOP END
+LOOP END
+===========================================================================
+
+Begin optimization report for: Central2D<Shallow2D, MinMod<Shallow2D::real, Shallow2D::vec>>::limited_derivs(Central2D<Shallow2D, MinMod<Shallow2D::real, Shallow2D::vec>> *)
+
+    Report from: Vector optimizations [vec]
+
+
+LOOP BEGIN at minmod.h(83,9) inlined into central2d.h(394,5)
+   remark #15344: loop was not vectorized: vector dependence prevents vectorization
+   remark #15346: vector dependence: assumed OUTPUT dependence between F32 line 91 and F32 line 91
+   remark #15346: vector dependence: assumed OUTPUT dependence between F32 line 91 and F32 line 91
+
+   LOOP BEGIN at minmod.h(84,13) inlined into central2d.h(394,5)
+      remark #15344: loop was not vectorized: vector dependence prevents vectorization
+      remark #15346: vector dependence: assumed ANTI dependence between F32 line 85 and F32 line 91
+      remark #15346: vector dependence: assumed FLOW dependence between F32 line 91 and F32 line 85
+   LOOP END
+LOOP END
+
+LOOP BEGIN at minmod.h(83,9) inlined into central2d.h(395,5)
+   remark #15344: loop was not vectorized: vector dependence prevents vectorization
+   remark #15346: vector dependence: assumed OUTPUT dependence between F32 line 91 and F32 line 91
+   remark #15346: vector dependence: assumed OUTPUT dependence between F32 line 91 and F32 line 91
+
+   LOOP BEGIN at minmod.h(84,13) inlined into central2d.h(395,5)
+      remark #15344: loop was not vectorized: vector dependence prevents vectorization
+      remark #15346: vector dependence: assumed ANTI dependence between F32 line 85 and F32 line 91
+      remark #15346: vector dependence: assumed FLOW dependence between F32 line 91 and F32 line 85
+   LOOP END
+LOOP END
+
+LOOP BEGIN at minmod.h(83,9) inlined into central2d.h(396,5)
+   remark #15344: loop was not vectorized: vector dependence prevents vectorization
+   remark #15346: vector dependence: assumed OUTPUT dependence between F32 line 91 and F32 line 91
+   remark #15346: vector dependence: assumed OUTPUT dependence between F32 line 91 and F32 line 91
+
+   LOOP BEGIN at minmod.h(84,13) inlined into central2d.h(396,5)
+      remark #15344: loop was not vectorized: vector dependence prevents vectorization
+      remark #15346: vector dependence: assumed ANTI dependence between F32 line 85 and F32 line 91
+      remark #15346: vector dependence: assumed FLOW dependence between F32 line 91 and F32 line 85
+   LOOP END
+LOOP END
+
+LOOP BEGIN at minmod.h(83,9) inlined into central2d.h(397,5)
+   remark #15344: loop was not vectorized: vector dependence prevents vectorization
+   remark #15346: vector dependence: assumed OUTPUT dependence between F32 line 91 and F32 line 91
+   remark #15346: vector dependence: assumed OUTPUT dependence between F32 line 91 and F32 line 91
+
+   LOOP BEGIN at minmod.h(84,13) inlined into central2d.h(397,5)
+      remark #15344: loop was not vectorized: vector dependence prevents vectorization
+      remark #15346: vector dependence: assumed ANTI dependence between F32 line 85 and F32 line 91
+      remark #15346: vector dependence: assumed FLOW dependence between F32 line 91 and F32 line 85
+   LOOP END
+LOOP END
+
+LOOP BEGIN at minmod.h(83,9) inlined into central2d.h(398,5)
+   remark #15344: loop was not vectorized: vector dependence prevents vectorization
+   remark #15346: vector dependence: assumed OUTPUT dependence between F32 line 91 and F32 line 91
+   remark #15346: vector dependence: assumed OUTPUT dependence between F32 line 91 and F32 line 91
+
+   LOOP BEGIN at minmod.h(84,13) inlined into central2d.h(398,5)
+      remark #15344: loop was not vectorized: vector dependence prevents vectorization
+      remark #15346: vector dependence: assumed ANTI dependence between F32 line 85 and F32 line 91
+      remark #15346: vector dependence: assumed FLOW dependence between F32 line 91 and F32 line 85
+   LOOP END
+LOOP END
+
+LOOP BEGIN at minmod.h(83,9) inlined into central2d.h(399,5)
+   remark #15344: loop was not vectorized: vector dependence prevents vectorization
+   remark #15346: vector dependence: assumed OUTPUT dependence between F32 line 91 and F32 line 91
+   remark #15346: vector dependence: assumed OUTPUT dependence between F32 line 91 and F32 line 91
+
+   LOOP BEGIN at minmod.h(84,13) inlined into central2d.h(399,5)
+      remark #15344: loop was not vectorized: vector dependence prevents vectorization
+      remark #15346: vector dependence: assumed ANTI dependence between F32 line 85 and F32 line 91
+      remark #15346: vector dependence: assumed FLOW dependence between F32 line 91 and F32 line 85
+   LOOP END
+LOOP END
+
+LOOP BEGIN at minmod.h(99,9) inlined into central2d.h(400,5)
+   remark #15542: loop was not vectorized: inner loop was already vectorized
+
+   LOOP BEGIN at minmod.h(100,13) inlined into central2d.h(400,5)
+   <Peeled>
+   LOOP END
+
+   LOOP BEGIN at minmod.h(100,13) inlined into central2d.h(400,5)
+      remark #15389: vectorization support: reference F32 has unaligned access   [ minmod.h(101,17) ]
+      remark #15389: vectorization support: reference F32 has unaligned access   [ minmod.h(102,17) ]
+      remark #15389: vectorization support: reference F32 has unaligned access   [ minmod.h(104,17) ]
+      remark #15389: vectorization support: reference F32 has unaligned access   [ minmod.h(107,19) ]
+      remark #15381: vectorization support: unaligned access used inside loop body
+      remark #15525: call to function '__builtin_copysignf' is serialized   [ /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/cmath(1241,12) ]
+      remark #15525: call to function '__builtin_copysignf' is serialized   [ /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/cmath(1241,12) ]
+      remark #15525: call to function '__builtin_copysignf' is serialized   [ /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/cmath(1241,12) ]
+      remark #15525: call to function '__builtin_copysignf' is serialized   [ /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/cmath(1241,12) ]
+      remark #15300: LOOP WAS VECTORIZED
+      remark #15442: entire loop may be executed in remainder
+      remark #15450: unmasked unaligned unit stride loads: 3 
+      remark #15451: unmasked unaligned unit stride stores: 1 
+      remark #15475: --- begin vector loop cost summary ---
+      remark #15476: scalar loop cost: 496 
+      remark #15477: vector loop cost: 461.250 
+      remark #15478: estimated potential speedup: 1.070 
+      remark #15479: lightweight vector operations: 68 
+      remark #15480: medium-overhead vector operations: 1 
+      remark #15485: serialized function calls: 4
+      remark #15488: --- end vector loop cost summary ---
+      remark #15489: --- begin vector function matching report ---
+      remark #15490: Function call: __builtin_copysignf(float, float) with simdlen=8, actual parameter types: (uniform,vector)   [ /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/cmath(1241,12) ]
+      remark #15545: SIMD annotation was not seen, consider adding 'declare simd' directives at function declaration 
+      remark #15490: Function call: __builtin_copysignf(float, float) with simdlen=8, actual parameter types: (uniform,vector)   [ /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/cmath(1241,12) ]
+      remark #15545: SIMD annotation was not seen, consider adding 'declare simd' directives at function declaration 
+      remark #15490: Function call: __builtin_copysignf(float, float) with simdlen=8, actual parameter types: (uniform,vector)   [ /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/cmath(1241,12) ]
+      remark #15545: SIMD annotation was not seen, consider adding 'declare simd' directives at function declaration 
+      remark #15490: Function call: __builtin_copysignf(float, float) with simdlen=8, actual parameter types: (uniform,vector)   [ /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/cmath(1241,12) ]
+      remark #15545: SIMD annotation was not seen, consider adding 'declare simd' directives at function declaration 
+      remark #15493: --- end vector function matching report ---
+   LOOP END
+
+   LOOP BEGIN at minmod.h(100,13) inlined into central2d.h(400,5)
+   <Remainder>
+   LOOP END
+LOOP END
+
+LOOP BEGIN at minmod.h(99,9) inlined into central2d.h(401,5)
+   remark #15344: loop was not vectorized: vector dependence prevents vectorization
+   remark #15346: vector dependence: assumed OUTPUT dependence between F32 line 107 and F32 line 107
+   remark #15346: vector dependence: assumed OUTPUT dependence between F32 line 107 and F32 line 107
+
+   LOOP BEGIN at minmod.h(100,13) inlined into central2d.h(401,5)
+      remark #15344: loop was not vectorized: vector dependence prevents vectorization
+      remark #15346: vector dependence: assumed ANTI dependence between F32 line 101 and F32 line 107
+      remark #15346: vector dependence: assumed FLOW dependence between F32 line 107 and F32 line 101
+   LOOP END
+LOOP END
+
+LOOP BEGIN at minmod.h(99,9) inlined into central2d.h(402,5)
+   remark #15344: loop was not vectorized: vector dependence prevents vectorization
+   remark #15346: vector dependence: assumed OUTPUT dependence between F32 line 107 and F32 line 107
+   remark #15346: vector dependence: assumed OUTPUT dependence between F32 line 107 and F32 line 107
+
+   LOOP BEGIN at minmod.h(100,13) inlined into central2d.h(402,5)
+      remark #15344: loop was not vectorized: vector dependence prevents vectorization
+      remark #15346: vector dependence: assumed ANTI dependence between F32 line 101 and F32 line 107
+      remark #15346: vector dependence: assumed FLOW dependence between F32 line 107 and F32 line 101
+   LOOP END
+LOOP END
+
+LOOP BEGIN at minmod.h(99,9) inlined into central2d.h(403,5)
+   remark #15344: loop was not vectorized: vector dependence prevents vectorization
+   remark #15346: vector dependence: assumed OUTPUT dependence between F32 line 107 and F32 line 107
+   remark #15346: vector dependence: assumed OUTPUT dependence between F32 line 107 and F32 line 107
+
+   LOOP BEGIN at minmod.h(100,13) inlined into central2d.h(403,5)
+      remark #15344: loop was not vectorized: vector dependence prevents vectorization
+      remark #15346: vector dependence: assumed ANTI dependence between F32 line 101 and F32 line 107
+      remark #15346: vector dependence: assumed FLOW dependence between F32 line 107 and F32 line 101
+   LOOP END
+LOOP END
+
+LOOP BEGIN at minmod.h(99,9) inlined into central2d.h(404,5)
+   remark #15344: loop was not vectorized: vector dependence prevents vectorization
+   remark #15346: vector dependence: assumed OUTPUT dependence between F32 line 107 and F32 line 107
+   remark #15346: vector dependence: assumed OUTPUT dependence between F32 line 107 and F32 line 107
+
+   LOOP BEGIN at minmod.h(100,13) inlined into central2d.h(404,5)
+      remark #15344: loop was not vectorized: vector dependence prevents vectorization
+      remark #15346: vector dependence: assumed ANTI dependence between F32 line 101 and F32 line 107
+      remark #15346: vector dependence: assumed FLOW dependence between F32 line 107 and F32 line 101
+   LOOP END
+LOOP END
+
+LOOP BEGIN at minmod.h(99,9) inlined into central2d.h(405,5)
+   remark #15344: loop was not vectorized: vector dependence prevents vectorization
+   remark #15346: vector dependence: assumed OUTPUT dependence between F32 line 107 and F32 line 107
+   remark #15346: vector dependence: assumed OUTPUT dependence between F32 line 107 and F32 line 107
+
+   LOOP BEGIN at minmod.h(100,13) inlined into central2d.h(405,5)
+      remark #15344: loop was not vectorized: vector dependence prevents vectorization
+      remark #15346: vector dependence: assumed ANTI dependence between F32 line 101 and F32 line 107
+      remark #15346: vector dependence: assumed FLOW dependence between F32 line 107 and F32 line 101
+   LOOP END
+LOOP END
+===========================================================================
+
+Begin optimization report for: Central2D<Shallow2D, MinMod<Shallow2D::real, Shallow2D::vec>>::compute_fg_speeds(Central2D<Shallow2D, MinMod<Shallow2D::real, Shallow2D::vec>> *, Central2D<Shallow2D, MinMod<Shallow2D::real, Shallow2D::vec>>::real &, Central2D<Shallow2D, MinMod<Shallow2D::real, Shallow2D::vec>>::real &)
+
+    Report from: Vector optimizations [vec]
+
+
+LOOP BEGIN at shallow2d.h(100,9) inlined into central2d.h(377,5)
+   remark #15415: vectorization support: gather was generated for the variable F32:  indirect access, 64bit indexed   [ shallow2d.h(102,29) ]
+   remark #15415: vectorization support: gather was generated for the variable F32:  indirect access, 64bit indexed   [ shallow2d.h(103,31) ]
+   remark #15415: vectorization support: gather was generated for the variable F32:  indirect access, 64bit indexed   [ shallow2d.h(104,31) ]
+   remark #15399: vectorization support: unroll factor set to 2
+   remark #15301: SIMD LOOP WAS VECTORIZED
+   remark #15458: masked indexed (or gather) loads: 3 
+   remark #15459: masked indexed (or scatter) stores: 6 
+   remark #15475: --- begin vector loop cost summary ---
+   remark #15476: scalar loop cost: 231 
+   remark #15477: vector loop cost: 131.870 
+   remark #15478: estimated potential speedup: 1.730 
+   remark #15479: lightweight vector operations: 145 
+   remark #15487: type converts: 8 
+   remark #15488: --- end vector loop cost summary ---
+
+   LOOP BEGIN at shallow2d.h(101,13) inlined into central2d.h(377,5)
+      remark #25460: No loop optimizations reported
+   LOOP END
+LOOP END
+
+LOOP BEGIN at shallow2d.h(100,9) inlined into central2d.h(377,5)
+<Remainder>
+   remark #15301: REMAINDER LOOP WAS VECTORIZED
+
+   LOOP BEGIN at shallow2d.h(101,13) inlined into central2d.h(377,5)
+      remark #25460: No loop optimizations reported
+   LOOP END
+LOOP END
+
+LOOP BEGIN at shallow2d.h(100,9) inlined into central2d.h(377,5)
+<Remainder>
+
+   LOOP BEGIN at shallow2d.h(101,13) inlined into central2d.h(377,5)
+      remark #25460: No loop optimizations reported
+   LOOP END
+LOOP END
+
+LOOP BEGIN at shallow2d.h(118,9) inlined into central2d.h(378,5)
+<Peeled>
+LOOP END
+
+LOOP BEGIN at shallow2d.h(118,9) inlined into central2d.h(378,5)
+   remark #15389: vectorization support: reference F32 has unaligned access   [ shallow2d.h(119,25) ]
+   remark #15389: vectorization support: reference F32 has unaligned access   [ shallow2d.h(120,27) ]
+   remark #15389: vectorization support: reference F32 has unaligned access   [ shallow2d.h(121,27) ]
+   remark #15381: vectorization support: unaligned access used inside loop body
+   remark #15300: LOOP WAS VECTORIZED
+   remark #15442: entire loop may be executed in remainder
+   remark #15450: unmasked unaligned unit stride loads: 3 
+   remark #15475: --- begin vector loop cost summary ---
+   remark #15476: scalar loop cost: 139 
+   remark #15477: vector loop cost: 16.370 
+   remark #15478: estimated potential speedup: 6.450 
+   remark #15479: lightweight vector operations: 39 
+   remark #15488: --- end vector loop cost summary ---
+LOOP END
+
+LOOP BEGIN at shallow2d.h(118,9) inlined into central2d.h(378,5)
+<Remainder>
+LOOP END
+===========================================================================
+
+Begin optimization report for: Central2D<Shallow2D, MinMod<Shallow2D::real, Shallow2D::vec>>::apply_periodic(Central2D<Shallow2D, MinMod<Shallow2D::real, Shallow2D::vec>> *)
+
+    Report from: Vector optimizations [vec]
+
+
+LOOP BEGIN at central2d.h(320,5)
+   remark #15344: loop was not vectorized: vector dependence prevents vectorization
+   remark #15346: vector dependence: assumed ANTI dependence between this line 322 and F32 line 323
+   remark #15346: vector dependence: assumed FLOW dependence between F32 line 323 and this line 322
+
+   LOOP BEGIN at central2d.h(321,9)
+   LOOP END
+LOOP END
+
+LOOP BEGIN at central2d.h(326,5)
+   remark #15523: loop was not vectorized: cannot compute loop iteration count before executing the loop.
+
+   LOOP BEGIN at central2d.h(327,9)
+      remark #15344: loop was not vectorized: vector dependence prevents vectorization
+      remark #15346: vector dependence: assumed ANTI dependence between this line 328 and F32 line 329
+      remark #15346: vector dependence: assumed FLOW dependence between F32 line 329 and this line 328
+   LOOP END
+LOOP END
+
+LOOP BEGIN at central2d.h(332,5)
+   remark #15523: loop was not vectorized: cannot compute loop iteration count before executing the loop.
+
+   LOOP BEGIN at central2d.h(333,9)
+      remark #15344: loop was not vectorized: vector dependence prevents vectorization
+      remark #15346: vector dependence: assumed ANTI dependence between this line 334 and F32 line 335
+      remark #15346: vector dependence: assumed FLOW dependence between F32 line 335 and this line 334
+   LOOP END
+LOOP END
+
+LOOP BEGIN at central2d.h(339,5)
+   remark #15344: loop was not vectorized: vector dependence prevents vectorization
+   remark #15346: vector dependence: assumed ANTI dependence between this line 341 and F32 line 342
+   remark #15346: vector dependence: assumed FLOW dependence between F32 line 342 and this line 341
+
+   LOOP BEGIN at central2d.h(340,9)
+   LOOP END
+LOOP END
+
+LOOP BEGIN at central2d.h(345,5)
+   remark #15523: loop was not vectorized: cannot compute loop iteration count before executing the loop.
+
+   LOOP BEGIN at central2d.h(346,9)
+      remark #15344: loop was not vectorized: vector dependence prevents vectorization
+      remark #15346: vector dependence: assumed ANTI dependence between this line 347 and F32 line 348
+      remark #15346: vector dependence: assumed FLOW dependence between F32 line 348 and this line 347
+   LOOP END
+LOOP END
+
+LOOP BEGIN at central2d.h(351,5)
+   remark #15523: loop was not vectorized: cannot compute loop iteration count before executing the loop.
+
+   LOOP BEGIN at central2d.h(352,9)
+      remark #15344: loop was not vectorized: vector dependence prevents vectorization
+      remark #15346: vector dependence: assumed ANTI dependence between this line 353 and F32 line 354
+      remark #15346: vector dependence: assumed FLOW dependence between F32 line 354 and this line 353
+   LOOP END
+LOOP END
+===========================================================================
+
+Begin optimization report for: Central2D<Shallow2D, MinMod<Shallow2D::real, Shallow2D::vec>>::Central2D(Central2D<Shallow2D, MinMod<Shallow2D::real, Shallow2D::vec>> *, Central2D<Shallow2D, MinMod<Shallow2D::real, Shallow2D::vec>>::real, Central2D<Shallow2D, MinMod<Shallow2D::real, Shallow2D::vec>>::real, int, int, Central2D<Shallow2D, MinMod<Shallow2D::real, Shallow2D::vec>>::real)
+
+    Report from: Vector optimizations [vec]
+
+
+LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(112,27)
+   remark #15542: loop was not vectorized: inner loop was already vectorized
+
+   LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(112,27)
+      remark #15389: vectorization support: reference __first has unaligned access   [ /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(762,3) ]
+      remark #15381: vectorization support: unaligned access used inside loop body
+      remark #15300: LOOP WAS VECTORIZED
+      remark #15451: unmasked unaligned unit stride stores: 1 
+      remark #15475: --- begin vector loop cost summary ---
+      remark #15476: scalar loop cost: 3 
+      remark #15477: vector loop cost: 0.620 
+      remark #15478: estimated potential speedup: 4.000 
+      remark #15479: lightweight vector operations: 3 
+      remark #15488: --- end vector loop cost summary ---
+   LOOP END
+
+   LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(112,27)
+   <Remainder>
+   LOOP END
+LOOP END
+
+LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(113,27)
+   remark #15542: loop was not vectorized: inner loop was already vectorized
+
+   LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(113,27)
+      remark #15389: vectorization support: reference __first has unaligned access   [ /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(762,3) ]
+      remark #15381: vectorization support: unaligned access used inside loop body
+      remark #15300: LOOP WAS VECTORIZED
+      remark #15451: unmasked unaligned unit stride stores: 1 
+      remark #15475: --- begin vector loop cost summary ---
+      remark #15476: scalar loop cost: 3 
+      remark #15477: vector loop cost: 0.620 
+      remark #15478: estimated potential speedup: 4.000 
+      remark #15479: lightweight vector operations: 3 
+      remark #15488: --- end vector loop cost summary ---
+   LOOP END
+
+   LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(113,27)
+   <Remainder>
+   LOOP END
+LOOP END
+
+LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(114,27)
+   remark #15542: loop was not vectorized: inner loop was already vectorized
+
+   LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(114,27)
+      remark #15389: vectorization support: reference __first has unaligned access   [ /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(762,3) ]
+      remark #15381: vectorization support: unaligned access used inside loop body
+      remark #15300: LOOP WAS VECTORIZED
+      remark #15451: unmasked unaligned unit stride stores: 1 
+      remark #15475: --- begin vector loop cost summary ---
+      remark #15476: scalar loop cost: 3 
+      remark #15477: vector loop cost: 0.620 
+      remark #15478: estimated potential speedup: 4.000 
+      remark #15479: lightweight vector operations: 3 
+      remark #15488: --- end vector loop cost summary ---
+   LOOP END
+
+   LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(114,27)
+   <Remainder>
+   LOOP END
+LOOP END
+
+LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(115,27)
+   remark #15542: loop was not vectorized: inner loop was already vectorized
+
+   LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(115,27)
+      remark #15389: vectorization support: reference __first has unaligned access   [ /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(762,3) ]
+      remark #15381: vectorization support: unaligned access used inside loop body
+      remark #15300: LOOP WAS VECTORIZED
+      remark #15451: unmasked unaligned unit stride stores: 1 
+      remark #15475: --- begin vector loop cost summary ---
+      remark #15476: scalar loop cost: 3 
+      remark #15477: vector loop cost: 0.620 
+      remark #15478: estimated potential speedup: 4.000 
+      remark #15479: lightweight vector operations: 3 
+      remark #15488: --- end vector loop cost summary ---
+   LOOP END
+
+   LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(115,27)
+   <Remainder>
+   LOOP END
+LOOP END
+
+LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(116,27)
+   remark #15542: loop was not vectorized: inner loop was already vectorized
+
+   LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(116,27)
+      remark #15389: vectorization support: reference __first has unaligned access   [ /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(762,3) ]
+      remark #15381: vectorization support: unaligned access used inside loop body
+      remark #15300: LOOP WAS VECTORIZED
+      remark #15451: unmasked unaligned unit stride stores: 1 
+      remark #15475: --- begin vector loop cost summary ---
+      remark #15476: scalar loop cost: 3 
+      remark #15477: vector loop cost: 0.620 
+      remark #15478: estimated potential speedup: 4.000 
+      remark #15479: lightweight vector operations: 3 
+      remark #15488: --- end vector loop cost summary ---
+   LOOP END
+
+   LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(116,27)
+   <Remainder>
+   LOOP END
+LOOP END
+
+LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(117,27)
+   remark #15542: loop was not vectorized: inner loop was already vectorized
+
+   LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(117,27)
+      remark #15389: vectorization support: reference __first has unaligned access   [ /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(762,3) ]
+      remark #15381: vectorization support: unaligned access used inside loop body
+      remark #15300: LOOP WAS VECTORIZED
+      remark #15451: unmasked unaligned unit stride stores: 1 
+      remark #15475: --- begin vector loop cost summary ---
+      remark #15476: scalar loop cost: 3 
+      remark #15477: vector loop cost: 0.620 
+      remark #15478: estimated potential speedup: 4.000 
+      remark #15479: lightweight vector operations: 3 
+      remark #15488: --- end vector loop cost summary ---
+   LOOP END
+
+   LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(117,27)
+   <Remainder>
+   LOOP END
+LOOP END
+
+LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(118,27)
+   remark #15542: loop was not vectorized: inner loop was already vectorized
+
+   LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(118,27)
+      remark #15389: vectorization support: reference __first has unaligned access   [ /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(762,3) ]
+      remark #15381: vectorization support: unaligned access used inside loop body
+      remark #15300: LOOP WAS VECTORIZED
+      remark #15451: unmasked unaligned unit stride stores: 1 
+      remark #15475: --- begin vector loop cost summary ---
+      remark #15476: scalar loop cost: 3 
+      remark #15477: vector loop cost: 0.620 
+      remark #15478: estimated potential speedup: 4.000 
+      remark #15479: lightweight vector operations: 3 
+      remark #15488: --- end vector loop cost summary ---
+   LOOP END
+
+   LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(118,27)
+   <Remainder>
+   LOOP END
+LOOP END
+
+LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(119,27)
+   remark #15542: loop was not vectorized: inner loop was already vectorized
+
+   LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(119,27)
+      remark #15389: vectorization support: reference __first has unaligned access   [ /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(762,3) ]
+      remark #15381: vectorization support: unaligned access used inside loop body
+      remark #15300: LOOP WAS VECTORIZED
+      remark #15451: unmasked unaligned unit stride stores: 1 
+      remark #15475: --- begin vector loop cost summary ---
+      remark #15476: scalar loop cost: 3 
+      remark #15477: vector loop cost: 0.620 
+      remark #15478: estimated potential speedup: 4.000 
+      remark #15479: lightweight vector operations: 3 
+      remark #15488: --- end vector loop cost summary ---
+   LOOP END
+
+   LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(119,27)
+   <Remainder>
+   LOOP END
+LOOP END
+
+LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(120,27)
+   remark #15542: loop was not vectorized: inner loop was already vectorized
+
+   LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(120,27)
+      remark #15389: vectorization support: reference __first has unaligned access   [ /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(762,3) ]
+      remark #15381: vectorization support: unaligned access used inside loop body
+      remark #15300: LOOP WAS VECTORIZED
+      remark #15451: unmasked unaligned unit stride stores: 1 
+      remark #15475: --- begin vector loop cost summary ---
+      remark #15476: scalar loop cost: 3 
+      remark #15477: vector loop cost: 0.620 
+      remark #15478: estimated potential speedup: 4.000 
+      remark #15479: lightweight vector operations: 3 
+      remark #15488: --- end vector loop cost summary ---
+   LOOP END
+
+   LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(120,27)
+   <Remainder>
+   LOOP END
+LOOP END
+
+LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(121,27)
+   remark #15542: loop was not vectorized: inner loop was already vectorized
+
+   LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(121,27)
+      remark #15389: vectorization support: reference __first has unaligned access   [ /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(762,3) ]
+      remark #15381: vectorization support: unaligned access used inside loop body
+      remark #15300: LOOP WAS VECTORIZED
+      remark #15451: unmasked unaligned unit stride stores: 1 
+      remark #15475: --- begin vector loop cost summary ---
+      remark #15476: scalar loop cost: 3 
+      remark #15477: vector loop cost: 0.620 
+      remark #15478: estimated potential speedup: 4.000 
+      remark #15479: lightweight vector operations: 3 
+      remark #15488: --- end vector loop cost summary ---
+   LOOP END
+
+   LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(121,27)
+   <Remainder>
+   LOOP END
+LOOP END
+
+LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(122,27)
+   remark #15542: loop was not vectorized: inner loop was already vectorized
+
+   LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(122,27)
+      remark #15389: vectorization support: reference __first has unaligned access   [ /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(762,3) ]
+      remark #15381: vectorization support: unaligned access used inside loop body
+      remark #15300: LOOP WAS VECTORIZED
+      remark #15451: unmasked unaligned unit stride stores: 1 
+      remark #15475: --- begin vector loop cost summary ---
+      remark #15476: scalar loop cost: 3 
+      remark #15477: vector loop cost: 0.620 
+      remark #15478: estimated potential speedup: 4.000 
+      remark #15479: lightweight vector operations: 3 
+      remark #15488: --- end vector loop cost summary ---
+   LOOP END
+
+   LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(122,27)
+   <Remainder>
+   LOOP END
+LOOP END
+
+LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(123,27)
+   remark #15542: loop was not vectorized: inner loop was already vectorized
+
+   LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(123,27)
+      remark #15389: vectorization support: reference __first has unaligned access   [ /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(762,3) ]
+      remark #15381: vectorization support: unaligned access used inside loop body
+      remark #15300: LOOP WAS VECTORIZED
+      remark #15451: unmasked unaligned unit stride stores: 1 
+      remark #15475: --- begin vector loop cost summary ---
+      remark #15476: scalar loop cost: 3 
+      remark #15477: vector loop cost: 0.620 
+      remark #15478: estimated potential speedup: 4.000 
+      remark #15479: lightweight vector operations: 3 
+      remark #15488: --- end vector loop cost summary ---
+   LOOP END
+
+   LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(123,27)
+   <Remainder>
+   LOOP END
+LOOP END
+
+LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(124,27)
+   remark #15542: loop was not vectorized: inner loop was already vectorized
+
+   LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(124,27)
+      remark #15389: vectorization support: reference __first has unaligned access   [ /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(762,3) ]
+      remark #15381: vectorization support: unaligned access used inside loop body
+      remark #15300: LOOP WAS VECTORIZED
+      remark #15451: unmasked unaligned unit stride stores: 1 
+      remark #15475: --- begin vector loop cost summary ---
+      remark #15476: scalar loop cost: 3 
+      remark #15477: vector loop cost: 0.620 
+      remark #15478: estimated potential speedup: 4.000 
+      remark #15479: lightweight vector operations: 3 
+      remark #15488: --- end vector loop cost summary ---
+   LOOP END
+
+   LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(124,27)
+   <Remainder>
+   LOOP END
+LOOP END
+
+LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(125,27)
+   remark #15542: loop was not vectorized: inner loop was already vectorized
+
+   LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(125,27)
+      remark #15389: vectorization support: reference __first has unaligned access   [ /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(762,3) ]
+      remark #15381: vectorization support: unaligned access used inside loop body
+      remark #15300: LOOP WAS VECTORIZED
+      remark #15451: unmasked unaligned unit stride stores: 1 
+      remark #15475: --- begin vector loop cost summary ---
+      remark #15476: scalar loop cost: 3 
+      remark #15477: vector loop cost: 0.620 
+      remark #15478: estimated potential speedup: 4.000 
+      remark #15479: lightweight vector operations: 3 
+      remark #15488: --- end vector loop cost summary ---
+   LOOP END
+
+   LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(125,27)
+   <Remainder>
+   LOOP END
+LOOP END
+
+LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(126,27)
+   remark #15542: loop was not vectorized: inner loop was already vectorized
+
+   LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(126,27)
+      remark #15389: vectorization support: reference __first has unaligned access   [ /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(762,3) ]
+      remark #15381: vectorization support: unaligned access used inside loop body
+      remark #15300: LOOP WAS VECTORIZED
+      remark #15451: unmasked unaligned unit stride stores: 1 
+      remark #15475: --- begin vector loop cost summary ---
+      remark #15476: scalar loop cost: 3 
+      remark #15477: vector loop cost: 0.620 
+      remark #15478: estimated potential speedup: 4.000 
+      remark #15479: lightweight vector operations: 3 
+      remark #15488: --- end vector loop cost summary ---
+   LOOP END
+
+   LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(126,27)
+   <Remainder>
+   LOOP END
+LOOP END
+
+LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(127,27)
+   remark #15542: loop was not vectorized: inner loop was already vectorized
+
+   LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(127,27)
+      remark #15389: vectorization support: reference __first has unaligned access   [ /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(762,3) ]
+      remark #15381: vectorization support: unaligned access used inside loop body
+      remark #15300: LOOP WAS VECTORIZED
+      remark #15451: unmasked unaligned unit stride stores: 1 
+      remark #15475: --- begin vector loop cost summary ---
+      remark #15476: scalar loop cost: 3 
+      remark #15477: vector loop cost: 0.620 
+      remark #15478: estimated potential speedup: 4.000 
+      remark #15479: lightweight vector operations: 3 
+      remark #15488: --- end vector loop cost summary ---
+   LOOP END
+
+   LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(127,27)
+   <Remainder>
+   LOOP END
+LOOP END
+
+LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(128,27)
+   remark #15542: loop was not vectorized: inner loop was already vectorized
+
+   LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(128,27)
+      remark #15389: vectorization support: reference __first has unaligned access   [ /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(762,3) ]
+      remark #15381: vectorization support: unaligned access used inside loop body
+      remark #15300: LOOP WAS VECTORIZED
+      remark #15451: unmasked unaligned unit stride stores: 1 
+      remark #15475: --- begin vector loop cost summary ---
+      remark #15476: scalar loop cost: 3 
+      remark #15477: vector loop cost: 0.620 
+      remark #15478: estimated potential speedup: 4.000 
+      remark #15479: lightweight vector operations: 3 
+      remark #15488: --- end vector loop cost summary ---
+   LOOP END
+
+   LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(128,27)
+   <Remainder>
+   LOOP END
+LOOP END
+
+LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(129,27)
+   remark #15542: loop was not vectorized: inner loop was already vectorized
+
+   LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(129,27)
+      remark #15389: vectorization support: reference __first has unaligned access   [ /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(762,3) ]
+      remark #15381: vectorization support: unaligned access used inside loop body
+      remark #15300: LOOP WAS VECTORIZED
+      remark #15451: unmasked unaligned unit stride stores: 1 
+      remark #15475: --- begin vector loop cost summary ---
+      remark #15476: scalar loop cost: 3 
+      remark #15477: vector loop cost: 0.620 
+      remark #15478: estimated potential speedup: 4.000 
+      remark #15479: lightweight vector operations: 3 
+      remark #15488: --- end vector loop cost summary ---
+   LOOP END
+
+   LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(129,27)
+   <Remainder>
+   LOOP END
+LOOP END
+
+LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(130,27)
+   remark #15542: loop was not vectorized: inner loop was already vectorized
+
+   LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(130,27)
+      remark #15389: vectorization support: reference __first has unaligned access   [ /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(762,3) ]
+      remark #15381: vectorization support: unaligned access used inside loop body
+      remark #15300: LOOP WAS VECTORIZED
+      remark #15451: unmasked unaligned unit stride stores: 1 
+      remark #15475: --- begin vector loop cost summary ---
+      remark #15476: scalar loop cost: 3 
+      remark #15477: vector loop cost: 0.620 
+      remark #15478: estimated potential speedup: 4.000 
+      remark #15479: lightweight vector operations: 3 
+      remark #15488: --- end vector loop cost summary ---
+   LOOP END
+
+   LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(130,27)
+   <Remainder>
+   LOOP END
+LOOP END
+
+LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(131,27)
+   remark #15542: loop was not vectorized: inner loop was already vectorized
+
+   LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(131,27)
+      remark #15389: vectorization support: reference __first has unaligned access   [ /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(762,3) ]
+      remark #15381: vectorization support: unaligned access used inside loop body
+      remark #15300: LOOP WAS VECTORIZED
+      remark #15451: unmasked unaligned unit stride stores: 1 
+      remark #15475: --- begin vector loop cost summary ---
+      remark #15476: scalar loop cost: 3 
+      remark #15477: vector loop cost: 0.620 
+      remark #15478: estimated potential speedup: 4.000 
+      remark #15479: lightweight vector operations: 3 
+      remark #15488: --- end vector loop cost summary ---
+   LOOP END
+
+   LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(131,27)
+   <Remainder>
+   LOOP END
+LOOP END
+
+LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(132,27)
+   remark #15542: loop was not vectorized: inner loop was already vectorized
+
+   LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(132,27)
+      remark #15389: vectorization support: reference __first has unaligned access   [ /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(762,3) ]
+      remark #15381: vectorization support: unaligned access used inside loop body
+      remark #15300: LOOP WAS VECTORIZED
+      remark #15451: unmasked unaligned unit stride stores: 1 
+      remark #15475: --- begin vector loop cost summary ---
+      remark #15476: scalar loop cost: 3 
+      remark #15477: vector loop cost: 0.620 
+      remark #15478: estimated potential speedup: 4.000 
+      remark #15479: lightweight vector operations: 3 
+      remark #15488: --- end vector loop cost summary ---
+   LOOP END
+
+   LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(132,27)
+   <Remainder>
+   LOOP END
+LOOP END
+
+LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(133,27)
+   remark #15542: loop was not vectorized: inner loop was already vectorized
+
+   LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(133,27)
+      remark #15389: vectorization support: reference __first has unaligned access   [ /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(762,3) ]
+      remark #15381: vectorization support: unaligned access used inside loop body
+      remark #15300: LOOP WAS VECTORIZED
+      remark #15451: unmasked unaligned unit stride stores: 1 
+      remark #15475: --- begin vector loop cost summary ---
+      remark #15476: scalar loop cost: 3 
+      remark #15477: vector loop cost: 0.620 
+      remark #15478: estimated potential speedup: 4.000 
+      remark #15479: lightweight vector operations: 3 
+      remark #15488: --- end vector loop cost summary ---
+   LOOP END
+
+   LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into central2d.h(133,27)
+   <Remainder>
+   LOOP END
+LOOP END
+===========================================================================
+
+Begin optimization report for: std::vector<Shallow2D::real, std::allocator<Shallow2D::real>>::vector(std::vector<Shallow2D::real, std::allocator<Shallow2D::real>> *, std::vector<Shallow2D::real, std::allocator<Shallow2D::real>>::size_type, const std::vector<Shallow2D::real, std::allocator<Shallow2D::real>>::allocator_type &)
+
+    Report from: Vector optimizations [vec]
+
+
+LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_vector.h(280,9)
+   remark #15542: loop was not vectorized: inner loop was already vectorized
+
+   LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_vector.h(280,9)
+      remark #15389: vectorization support: reference __first has unaligned access   [ /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(762,3) ]
+      remark #15381: vectorization support: unaligned access used inside loop body
+      remark #15300: LOOP WAS VECTORIZED
+      remark #15451: unmasked unaligned unit stride stores: 1 
+      remark #15475: --- begin vector loop cost summary ---
+      remark #15476: scalar loop cost: 3 
+      remark #15477: vector loop cost: 0.620 
+      remark #15478: estimated potential speedup: 4.000 
+      remark #15479: lightweight vector operations: 3 
+      remark #15488: --- end vector loop cost summary ---
+   LOOP END
+
+   LOOP BEGIN at /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_algobase.h(760,7) inlined into /opt/rh/devtoolset-3/root/usr/include/c++/4.9.2/bits/stl_vector.h(280,9)
+   <Remainder>
+   LOOP END
+LOOP END
+===========================================================================
