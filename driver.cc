@@ -207,6 +207,7 @@ int main(int argc, char** argv)
     SimViz<Sim> viz(fname.c_str(), sim);
     sim.init(icfun1, icfun2, icfun3);
     sim.solution_check();
+    printf("init done\n");
     viz.write_frame();
 
     double total = 0.0;

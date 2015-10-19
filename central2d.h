@@ -105,8 +105,8 @@ public:
               int time_steps, // Number of time steps done by subgrids, set to 0 for main grid
 			  real cfl = 0.45) :  // Max allowed CFL number
         nx(nx), ny(ny), time_steps(time_steps), w(w), h(h),
-        nx_all(nx + 2*nghost),
-        ny_all(ny + 2*nghost),
+        nx_all(nx + 2*time_steps*nghost),
+        ny_all(ny + 2*time_steps*nghost),
         dx(w/nx), dy(h/ny),
         cfl(cfl), 
         u_h_   ( nx_all * ny_all),
@@ -264,7 +264,7 @@ private:
     void compute_fg_speeds(real& cx, real& cy);
     void limited_derivs();
     void compute_step(int io, real dt);
-	void init_smallgrid( Central2D<Physics, Limiter>& sub_sim, int s, int size_ratio );
+    void init_smallgrid( Central2D<Physics, Limiter>& sub_sim, int s, int size_ratio );
     void map_to_maingrid( Central2D<Physics, Limiter>& sub_sim, int s, int size_ratio );
 
 
@@ -288,17 +288,17 @@ void Central2D<Physics, Limiter>::init(F f0, F f1, F f2)
 {
     for (int iy = 0; iy < ny; ++iy) {
         for (int ix = 0; ix < nx; ++ix)
-            f0(u_h(nghost+ix,nghost+iy), (ix+0.5)*dx, (iy+0.5)*dy);
+            f0(u_h(time_steps*nghost+ix,time_steps*nghost+iy), (ix+0.5)*dx, (iy+0.5)*dy);
     }
 
     for (int iy = 0; iy < ny; ++iy) {
         for (int ix = 0; ix < nx; ++ix)
-            f1(u_hu(nghost+ix,nghost+iy), (ix+0.5)*dx, (iy+0.5)*dy);
+            f1(u_hu(time_steps*nghost+ix,time_steps*nghost+iy), (ix+0.5)*dx, (iy+0.5)*dy);
     }
 
     for (int iy = 0; iy < ny; ++iy) {
         for (int ix = 0; ix < nx; ++ix)
-            f2(u_hv(nghost+ix,nghost+iy), (ix+0.5)*dx, (iy+0.5)*dy);
+            f2(u_hv(time_steps*nghost+ix,time_steps*nghost+iy), (ix+0.5)*dx, (iy+0.5)*dy);
     }
 }
 
@@ -451,7 +451,8 @@ void Central2D<Physics, Limiter>::compute_step(int io, real dt)
 			uh_h(ix,iy)=u_h(ix,iy);
             uh_h(ix, iy) -= dtcdx2 * fx0(ix, iy);
             uh_h(ix, iy) -= dtcdy2 * gy0(ix, iy);
-			
+	    if (!(uh_h(ix,iy)>0)){printf("at (%d, %d), uh = %g, u = %g, dt = %g, dx = %g, dy=%g, fx0 = %g, gy0= %g", ix, iy, uh_h(ix,iy), u_h(ix,iy), dt, dx ,dy, fx0(ix, iy), gy0(ix,iy)); 
+		assert(uh_h(ix,iy)>0); }			
 			uh_hu(ix,iy)=u_hu(ix,iy);
             uh_hu(ix, iy) -= dtcdx2 * fx1(ix, iy);
             uh_hu(ix, iy) -= dtcdy2 * gy1(ix, iy);
@@ -479,7 +480,9 @@ void Central2D<Physics, Limiter>::compute_step(int io, real dt)
                                f0(ix+1,iy+1)   - f0(ix,iy+1))   -
                     dtcdy2 * ( g0(ix,  iy+1)   - g0(ix,  iy)    +
                                g0(ix+1,iy+1)   - g0(ix+1,iy));
-        }
+ 	    if (!(v_h(ix,iy)>0)){printf("at (%d, %d), v_h = %g, u = %g, dt = %g, dx = %g, dy=%g, fx0 = %g, gy0= %g", ix, iy, v_h(ix,iy), u_h(ix,iy), dt, dx ,dy, fx0(ix, iy), gy0(ix,iy)); 
+		assert(v_h(ix,iy)>0); }			
+	       }
 
     #pragma omp for
     for (int iy = nghost-io; iy < ny_all-(nghost-io); ++iy)
@@ -616,15 +619,15 @@ void Central2D<Physics, Limiter>::solution_check()
     real h_sum = 0, hu_sum = 0, hv_sum = 0;
     real hmin = u_h(nghost,nghost);
     real hmax = hmin;
-    for (int j = nghost; j < ny+nghost; ++j)
-        for (int i = nghost; i < nx+nghost; ++i) {
+    for (int j = time_steps*nghost; j < ny+time_steps*nghost; ++j)
+        for (int i = time_steps*nghost; i < nx+time_steps*nghost; ++i) {
             real h = u_h(i,j);
             h_sum += h;
             hu_sum += u_hu(i,j);
             hv_sum += u_hv(i,j);
             hmax = max(h, hmax);
             hmin = min(h, hmin);
-            assert( h > 0) ;
+            if (!(h>0)){ printf("i,j: %d, %d, h: %g \n", i,j,h);  assert( h > 0) ; }
         }
     real cell_area = dx*dy;
     h_sum *= cell_area;
@@ -656,7 +659,8 @@ void Central2D<Physics, Limiter>::init_smallgrid( Central2D<Physics, Limiter>& s
 			sub_sim.u_h(i,j)=u_h(x,y);
 			sub_sim.u_hu(i,j)=u_hu(x,y);
 			sub_sim.u_hv(i,j)=u_hv(x,y);
-	
+			if (!(sub_sim.u_h(i,j)>0)){
+			printf("at i: %d, j: %d, x:%d, y:%d, xcoor: %d, ycoor:%d", i,j,x,y, xcoor,ycoor); assert(sub_sim.u_h(i,j)>0);}
 		}
 	}
 	
