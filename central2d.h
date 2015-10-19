@@ -288,17 +288,17 @@ void Central2D<Physics, Limiter>::init(F f0, F f1, F f2)
 {
     for (int iy = 0; iy < ny; ++iy) {
         for (int ix = 0; ix < nx; ++ix)
-            f0(u_h(time_steps*nghost+ix,time_steps*nghost+iy), (ix+0.5)*dx, (iy+0.5)*dy);
+            f0(u_h(ix,iy), (ix+0.5)*dx, (iy+0.5)*dy);
     }
 
     for (int iy = 0; iy < ny; ++iy) {
         for (int ix = 0; ix < nx; ++ix)
-            f1(u_hu(time_steps*nghost+ix,time_steps*nghost+iy), (ix+0.5)*dx, (iy+0.5)*dy);
+            f1(u_hu(ix,iy), (ix+0.5)*dx, (iy+0.5)*dy);
     }
 
     for (int iy = 0; iy < ny; ++iy) {
         for (int ix = 0; ix < nx; ++ix)
-            f2(u_hv(time_steps*nghost+ix,time_steps*nghost+iy), (ix+0.5)*dx, (iy+0.5)*dy);
+            f2(u_hv(ix,iy), (ix+0.5)*dx, (iy+0.5)*dy);
     }
 }
 
@@ -317,7 +317,7 @@ void Central2D<Physics, Limiter>::init(F f0, F f1, F f2)
  * "canonical", and setting the values for all other cells `(ix,iy)`
  * to the corresponding canonical values `(ix+p*nx,iy+q*ny)` for some
  * integers `p` and `q`.
- */
+ *
 
 template <class Physics, class Limiter>
 void Central2D<Physics, Limiter>::apply_periodic()
@@ -587,7 +587,7 @@ void Central2D<Physics, Limiter>::run(real tfinal)
 				sub_sim.compute_fg_speeds(local_cx, local_cy);
 				if (!((local_cx < maxc) && (local_cy< maxc))){ 
 					printf("cx: %g, local_cx %g, cy %g, local_cy %g \n",cx,local_cx, cy, local_cy);}
-	//			assert( (local_cx < maxc) && (local_cy < maxc)); 
+			assert( (local_cx < maxc) && (local_cy < maxc)); 
 				sub_sim.limited_derivs(); 
 				sub_sim.compute_step(io%2, dt);
 
@@ -617,10 +617,10 @@ void Central2D<Physics, Limiter>::solution_check()
 {
     using namespace std;
     real h_sum = 0, hu_sum = 0, hv_sum = 0;
-    real hmin = u_h(nghost,nghost);
+    real hmin = u_h(0,0);
     real hmax = hmin;
-    for (int j = time_steps*nghost; j < ny+time_steps*nghost; ++j)
-        for (int i = time_steps*nghost; i < nx+time_steps*nghost; ++i) {
+    for (int j = 0; j < ny; ++j)
+        for (int i = 0; i < nx; ++i) {
             real h = u_h(i,j);
             h_sum += h;
             hu_sum += u_hu(i,j);
