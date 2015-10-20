@@ -30,7 +30,7 @@
  * limiter:
  */
 
-typedef Central2D< Shallow2D, MinMod<Shallow2D::real> > Sim;
+typedef Central2D< Shallow2D, MinMod<Shallow2D::real, Shallow2D::vec> > Sim;
 
 /**
  * ## Initial states
@@ -143,12 +143,12 @@ void wave_hv(Sim::real& hv, double x, double y) {
 
 int main(int argc, char** argv)
 {
-    std::string fname = "waves.out";
+    std::string fname = "wave.out";
     std::string ic    = "dam_break";
     int    nx         = 200;
     double width      = 2.0;
     double ftime      = 0.01;
-    int    frames     = 50;
+    int    frames     = 100;
     
     int c;
     extern char* optarg;
@@ -202,16 +202,15 @@ int main(int argc, char** argv)
     } else {
         fprintf(stderr, "Unknown initial conditions\n");
     }
-
-    printf("starting\n");
-    Sim sim(width,width, nx,nx, 0); // no need for ghost cells in the main grid
     
+    Sim sim(width,width, nx,nx, 0);
     SimViz<Sim> viz(fname.c_str(), sim);
     sim.init(icfun1, icfun2, icfun3);
     sim.solution_check();
-    printf("done with check init\n");
+    printf("init done\n");
     viz.write_frame();
 
+    double total = 0.0;
     std::ofstream time_file;
     time_file.open("timings.csv");
     for (int i = 0; i < frames; ++i) {
@@ -221,11 +220,14 @@ int main(int argc, char** argv)
         double t1 = omp_get_wtime();
         printf("Time: %e\n", t1-t0);
         time_file << t1-t0 << std::endl;
+        total += (t1 - t0);
 #else
         sim.run(ftime);
 #endif
         sim.solution_check();
         viz.write_frame();
     }
+    time_file << total << std::endl;
     time_file.close();
+
 }

@@ -54,8 +54,6 @@ dam_break.mp4: dam_break.out
 wave.mp4: wave.out
 	$(PYTHON) visualizer.py wave.out wave.mp4 wave.png
 
-river.mp4: river.out
-	$(PYTHON) visualizer.py river.out river.mp4 river.png
 # ===
 # Generate output files
 
