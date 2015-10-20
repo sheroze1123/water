@@ -734,6 +734,15 @@ void Central2D<Physics, Limiter>::run(real tfinal)
 			}
 			map_to_maingrid( sub_sim, s, size_ratio);
 		}
+
+		for(int iy=0; iy < ny_all; ++iy){
+			for (int ix=0; ix < nx_all; ++ix){
+				u_h(ix,iy)=v_h(ix,iy);
+				u_hu(ix,iy)=v_hu(ix,iy);
+				u_hv(ix,iy)=v_hv(ix,iy);
+			}
+		}
+
 		if(t+time_steps*dt==tfinal){
 			done=true;}
 		else{t+=time_steps*dt;}
@@ -822,9 +831,9 @@ void Central2D<Physics, Limiter>::map_to_maingrid( Central2D<Physics, Limiter>& 
 
 	for( int i=0; i < sub_sim.nx; ++i){
 		for( int j=0; j < sub_sim.nx; ++j){
-			u_h(xcoor+i,ycoor+j)= sub_sim.u_h(i+t*nghost,j+t*nghost);
-			u_hu(xcoor+i,ycoor+j)= sub_sim.u_hu(i+t*nghost,j+t*nghost);
-			u_hv(xcoor+i,ycoor+j)= sub_sim.u_hv(i+t*nghost,j+t*nghost);
+			v_h(xcoor+i,ycoor+j)= sub_sim.u_h(i+t*nghost,j+t*nghost);
+			v_hu(xcoor+i,ycoor+j)= sub_sim.u_hu(i+t*nghost,j+t*nghost);
+			v_hv(xcoor+i,ycoor+j)= sub_sim.u_hv(i+t*nghost,j+t*nghost);
 			
 		}
 	}
