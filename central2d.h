@@ -596,7 +596,7 @@ void Central2D<Physics, Limiter>::run(real tfinal)
 		}
 		#pragma omp parallel for
 		for( int iy =0; iy < ny_all; ++iy)
-			for( int ix; ix < ny_all; ++ix){
+			for( int ix=0; ix < ny_all; ++ix){
 			u_h(ix,iy)=v_h(ix,iy);
 			u_hu(ix,iy)=v_hu(ix,iy);
 			u_hv(ix,iy)=v_hv(ix,iy);
