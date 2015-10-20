@@ -451,8 +451,7 @@ void Central2D<Physics, Limiter>::compute_step(int io, real dt)
 			uh_h(ix,iy)=u_h(ix,iy);
             uh_h(ix, iy) -= dtcdx2 * fx0(ix, iy);
             uh_h(ix, iy) -= dtcdy2 * gy0(ix, iy);
-	    if (!(uh_h(ix,iy)>0)){printf("at (%d, %d), uh = %g, u = %g, dt = %g, dx = %g, dy=%g, fx0 = %g, gy0= %g", ix, iy, uh_h(ix,iy), u_h(ix,iy), dt, dx ,dy, fx0(ix, iy), gy0(ix,iy)); 
-		assert(uh_h(ix,iy)>0); }			
+	   
 			uh_hu(ix,iy)=u_hu(ix,iy);
             uh_hu(ix, iy) -= dtcdx2 * fx1(ix, iy);
             uh_hu(ix, iy) -= dtcdy2 * gy1(ix, iy);
@@ -480,8 +479,6 @@ void Central2D<Physics, Limiter>::compute_step(int io, real dt)
                                f0(ix+1,iy+1)   - f0(ix,iy+1))   -
                     dtcdy2 * ( g0(ix,  iy+1)   - g0(ix,  iy)    +
                                g0(ix+1,iy+1)   - g0(ix+1,iy));
- 	    if (!(v_h(ix,iy)>0)){printf("at (%d, %d), v_h = %g, u = %g, dt = %g, dx = %g, dy=%g, fx0 = %g, gy0= %g", ix, iy, v_h(ix,iy), u_h(ix,iy), dt, dx ,dy, fx0(ix, iy), gy0(ix,iy)); 
-		assert(v_h(ix,iy)>0); }			
 	       }
 
     #pragma omp for
@@ -564,7 +561,7 @@ void Central2D<Physics, Limiter>::run(real tfinal)
     int sub_size = nx/size_ratio; // size of subdomain
     int sub_number = nx*nx/sub_size/sub_size;
     int time_steps= 10; // number of time steps done before synchronisation -- MUST BE EVEN
-    printf("MAIN dx: %g dy: %g \n", dx, dy);
+    
     while (!done) { 
 		
         	real dt;
@@ -585,9 +582,7 @@ void Central2D<Physics, Limiter>::run(real tfinal)
 			for (int io = 0; io < time_steps; ++io) {
 
 				sub_sim.compute_fg_speeds(local_cx, local_cy);
-				if (!((local_cx < maxc) && (local_cy< maxc))){ 
-					printf("cx: %g, local_cx %g, cy %g, local_cy %g \n",cx,local_cx, cy, local_cy);}
-			assert( (local_cx < maxc) && (local_cy < maxc)); 
+				assert( (local_cx < maxc) && (local_cy < maxc)); 
 				sub_sim.limited_derivs(); 
 				sub_sim.compute_step(io%2, dt);
 
@@ -596,7 +591,7 @@ void Central2D<Physics, Limiter>::run(real tfinal)
 		}
 		#pragma omp parallel for
 		for( int iy =0; iy < ny_all; ++iy)
-			for( int ix=0; ix < ny_all; ++ix){
+			for( int ix=0; ix < nx_all; ++ix){
 			u_h(ix,iy)=v_h(ix,iy);
 			u_hu(ix,iy)=v_hu(ix,iy);
 			u_hv(ix,iy)=v_hv(ix,iy);
@@ -634,7 +629,7 @@ void Central2D<Physics, Limiter>::solution_check()
             hv_sum += u_hv(i,j);
             hmax = max(h, hmax);
             hmin = min(h, hmin);
-            if (!(h>0)){ printf("i,j: %d, %d, h: %g \n", i,j,h);  assert( h > 0) ; }
+            assert( h > 0) ; 
         }
     real cell_area = dx*dy;
     h_sum *= cell_area;
@@ -652,7 +647,7 @@ void Central2D<Physics, Limiter>::init_smallgrid( Central2D<Physics, Limiter>& s
 
 	for( int i=0; i < sub_sim.nx_all; ++i){
 		for( int j=0; j < sub_sim.ny_all; ++j){
-			if( xcoor -t*nghost+i < 0){
+	/**		if( xcoor -t*nghost+i < 0){
 				x=nx+(xcoor-t*nghost+i);
 			}else if( xcoor -t*nghost+i >= nx){
 				x=xcoor-t*nghost+i - nx;
@@ -662,12 +657,14 @@ void Central2D<Physics, Limiter>::init_smallgrid( Central2D<Physics, Limiter>& s
 				y=ny+(ycoor-t*nghost+j);
 			}else if( ycoor -t*nghost+j >= ny){
 				y=ycoor-t*nghost+j - ny;
-			}else{ y = ycoor-t*nghost+j; }	
+	
+			}else{ y = ycoor-t*nghost+j; } */
+			x=(nx+xcoor-t*nghost+i)%nx;
+			y=(ny+ycoor-t*nghost+j)%ny;	
 			sub_sim.u_h(i,j)=u_h(x,y);
 			sub_sim.u_hu(i,j)=u_hu(x,y);
 			sub_sim.u_hv(i,j)=u_hv(x,y);
-			if (!(sub_sim.u_h(i,j)>0)){
-			printf("at i: %d, j: %d, x:%d, y:%d, xcoor: %d, ycoor:%d", i,j,x,y, xcoor,ycoor); assert(sub_sim.u_h(i,j)>0);}
+			
 		}
 	}
 	
