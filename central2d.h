@@ -467,8 +467,8 @@ void Central2D<Physics, Limiter>::compute_step(int io, real dt)
 
     // Corrector for h component (finish the step)
     #pragma omp for
-    for (int iy = 2; iy < ny_all-2; ++iy) // maybe this is wrong?
-        for (int ix = 2; ix < nx_all-2; ++ix) {
+    for (int iy = nghost-io; iy < ny_all-(nghost-io); ++iy) // maybe this is wrong?
+        for (int ix = nghost-io; ix < nx_all-(nghost-io); ++ix) {
                 v_h(ix,iy) =
                     0.2500 * ( u_h(ix,  iy) + u_h(ix+1,iy)      +
                                u_h(ix,iy+1) + u_h(ix+1,iy+1))   -
@@ -485,8 +485,8 @@ void Central2D<Physics, Limiter>::compute_step(int io, real dt)
 	       }
 
     #pragma omp for
-   for (int iy = 2; iy < ny_all-2; ++iy) // maybe this is wrong?
-        for (int ix = 2; ix < nx_all-2; ++ix) {
+    for (int iy = nghost-io; iy < ny_all-(nghost-io); ++iy) // maybe this is wrong?
+        for (int ix = nghost-io; ix < nx_all-(nghost-io); ++ix) {
                 v_hu(ix,iy) =
                     0.2500 * ( u_hu(ix,  iy) + u_hu(ix+1,iy)      +
                                u_hu(ix,iy+1) + u_hu(ix+1,iy+1))   -
@@ -519,20 +519,20 @@ void Central2D<Physics, Limiter>::compute_step(int io, real dt)
 
     // Copy from v storage back to main grid
     #pragma omp for
-    for (int j = 2; j < ny_all-2; ++j)
-        for (int i = nghost; i < nx_all -nghost; ++i){
+    for (int j = nghost-io; j < ny_all-(nghost-io); ++j) // maybe this is wrong?
+        for (int i = nghost-io; i < nx_all-(nghost-io); ++i) {
             u_h(i,j) = v_h(i-io,j-io);
         }
 
     #pragma omp for
-    for (int j = 2; j < ny_all -2; ++j)
-        for (int i = nghost; i < nx_all - nghost; ++i){
+    for (int j = nghost-io; j < ny_all-(nghost-io); ++j) // maybe this is wrong?
+        for (int i = nghost-io; i < nx_all-(nghost-io); ++i) {
             u_hu(i,j) = v_hu(i-io,j-io);
         }
 
     #pragma omp for
-    for (int j = 2; j < ny_all-2; ++j)
-        for (int i = nghost; i < nx_all-nghost; ++i){
+    for (int j = nghost-io; j < ny_all-(nghost-io); ++j) // maybe this is wrong?
+        for (int i = nghost-io; ii < nx_all-(nghost-io); ++i) {
             u_hv(i,j) = v_hv(i-io,j-io);
         }
 }
