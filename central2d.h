@@ -451,8 +451,8 @@ void Central2D<Physics, Limiter>::compute_step(int io, real dt)
 			uh_h(ix,iy)=u_h(ix,iy);
             uh_h(ix, iy) -= dtcdx2 * fx0(ix, iy);
             uh_h(ix, iy) -= dtcdy2 * gy0(ix, iy);
-	    if (!(uh_h(ix,iy)>0)){printf("at (%d, %d), uh = %g, u = %g, dt = %g, dx = %g, dy=%g, fx0 = %g, gy0= %g", ix, iy, uh_h(ix,iy), u_h(ix,iy), dt, dx ,dy, fx0(ix, iy), gy0(ix,iy)); 
-		assert(uh_h(ix,iy)>0); }			
+	    //if (!(uh_h(ix,iy)>0)){printf("at (%d, %d), uh = %g, u = %g, dt = %g, dx = %g, dy=%g, fx0 = %g, gy0= %g", ix, iy, uh_h(ix,iy), u_h(ix,iy), dt, dx ,dy, fx0(ix, iy), gy0(ix,iy)); 
+	//	assert(uh_h(ix,iy)>0); }			
 			uh_hu(ix,iy)=u_hu(ix,iy);
             uh_hu(ix, iy) -= dtcdx2 * fx1(ix, iy);
             uh_hu(ix, iy) -= dtcdy2 * gy1(ix, iy);
@@ -532,7 +532,7 @@ void Central2D<Physics, Limiter>::compute_step(int io, real dt)
 
     #pragma omp for
     for (int j = nghost-io; j < ny_all-(nghost-io); ++j) // maybe this is wrong?
-        for (int i = nghost-io; ii < nx_all-(nghost-io); ++i) {
+        for (int i = nghost-io; i < nx_all-(nghost-io); ++i) {
             u_hv(i,j) = v_hv(i-io,j-io);
         }
 }
@@ -578,7 +578,7 @@ void Central2D<Physics, Limiter>::run(real tfinal)
 		if (t+time_steps*dt >= tfinal){ // if the next #time_steps steps bring us to the end, set dt to be 1/time_steps of that
 			dt = (tfinal-t)/time_steps; // could probably make this better by having two different dt's -- could have at most (time_steps -1) unnecessarily calls
 		}
-		#pragma omp parallel for 
+		//#pragma omp parallel for 
 		for(int s=0; s < sub_number; ++s){
 			Central2D<Physics, Limiter> sub_sim(w/size_ratio, h/size_ratio, sub_size, sub_size, time_steps);// builds sub-simulation on smaller grid
 			init_smallgrid(sub_sim, s, size_ratio);
