@@ -448,7 +448,7 @@ void Central2D<Physics, Limiter>::compute_step(int io, real dt)
     #pragma omp for
     for (int iy = 1; iy < ny_all-1; ++iy)
         for (int ix = 1; ix < nx_all-1; ++ix) {
-			uh_h(ix,iy)=u_h(ix,iy);
+	    uh_h(ix,iy)=u_h(ix,iy);
             uh_h(ix, iy) -= dtcdx2 * fx0(ix, iy);
             uh_h(ix, iy) -= dtcdy2 * gy0(ix, iy);
 	    //if (!(uh_h(ix,iy)>0)){printf("at (%d, %d), uh = %g, u = %g, dt = %g, dx = %g, dy=%g, fx0 = %g, gy0= %g", ix, iy, uh_h(ix,iy), u_h(ix,iy), dt, dx ,dy, fx0(ix, iy), gy0(ix,iy)); 
@@ -503,7 +503,7 @@ void Central2D<Physics, Limiter>::compute_step(int io, real dt)
     #pragma omp for
  
     for (int iy = 2; iy < ny_all-2; ++iy)
-        for (int ix = nghost-2; ix < nx_all-(nghost-2); ++ix) {
+        for (int ix = nghost-2; ix < nx_all-(nghost-io); ++ix) {
                 v_hv(ix,iy) =
                     0.2500 * ( u_hv(ix,  iy) + u_hv(ix+1,iy)      +
                                u_hv(ix,iy+1) + u_hv(ix+1,iy+1))   -
@@ -561,10 +561,10 @@ void Central2D<Physics, Limiter>::run(real tfinal)
     
     bool done = false;
     real t = 0;
-    int size_ratio=2; // big/small
+    int size_ratio=10; // big/small
     int sub_size = nx/size_ratio; // size of subdomain
     int sub_number = nx*nx/sub_size/sub_size;
-    int time_steps= 4; // number of time steps done before synchronisation -- MUST BE EVEN
+    int time_steps= 10; // number of time steps done before synchronisation -- MUST BE EVEN
     printf("MAIN dx: %g dy: %g \n", dx, dy);
     while (!done) { 
 		
