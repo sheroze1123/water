@@ -263,10 +263,13 @@ private:
     void apply_periodic();
     void compute_fg_speeds(real& cx, real& cy);
     void limited_derivs();
-    void compute_step(int io, real dt);
-    void init_smallgrid( Central2D<Physics, Limiter>& sub_sim, int s, int size_ratio );
-    void map_to_maingrid( Central2D<Physics, Limiter>& sub_sim, int s, int size_ratio );
-
+    void compute_fg_speeds_u(real& cx, real& cy);
+    void compute_fg_speeds_v(real& cx, real& cy);
+    void compute_step(int io, real dt);   
+    void init_smallgrid_from_u( Central2D<Physics, Limiter>& sub_sim, int s, int size_ratio );    
+    void init_smallgrid_from_v( Central2D<Physics, Limiter>& sub_sim, int s, int size_ratio );
+    void map_to_u( Central2D<Physics, Limiter>& sub_sim, int s, int size_ratio );
+    void map_to_v( Central2D<Physics, Limiter>& sub_sim, int s, int size_ratio );
 
 };
 
@@ -380,6 +383,28 @@ void Central2D<Physics, Limiter>::compute_fg_speeds(real& cx_, real& cy_)
     real cy = 1.0e-15;
 
     Physics::flux(f0_, f1_, f2_, g0_, g1_, g2_, u_h_, u_hu_, u_hv_, 0, nx_all, 0, ny_all, nx_all);
+    Physics::wave_speed(cx, cy, u_h_, u_hu_, u_hv_, (nx_all * ny_all));
+    cx_ = cx;
+    cy_ = cy;
+}
+
+template <class Physics, class Limiter>
+void Central2D<Physics, Limiter>::compute_fg_speeds_v(real& cx_, real& cy_)
+{
+    using namespace std;
+    real cx = 1.0e-15;
+    real cy = 1.0e-15;
+    Physics::wave_speed(cx, cy, v_h_, v_hu_, v_hv_, (nx_all * ny_all));
+    cx_ = cx;
+    cy_ = cy;
+}
+
+template <class Physics, class Limiter>
+void Central2D<Physics, Limiter>::compute_fg_speeds_u(real& cx_, real& cy_)
+{
+    using namespace std;
+    real cx = 1.0e-15;
+    real cy = 1.0e-15;
     Physics::wave_speed(cx, cy, u_h_, u_hu_, u_hv_, (nx_all * ny_all));
     cx_ = cx;
     cy_ = cy;
@@ -561,12 +586,13 @@ void Central2D<Physics, Limiter>::run(real tfinal)
     int sub_size = nx/size_ratio; // size of subdomain
     int sub_number = nx*nx/sub_size/sub_size;
     int time_steps= 10; // number of time steps done before synchronisation -- MUST BE EVEN
-    
+    bool maptov=false;
+   
     while (!done) { 
-		
+		maptov = !maptov;
         	real dt;
 		real cx, cy;
-		compute_fg_speeds(cx, cy);
+		if (maptov) { compute_fg_speeds_u(cx, cy); } else { compute_fg_speeds_v(cx,cy);}
 		cx = 2*cx; // overestimating cx and cy as we wont be recomputing it for the next #time_steps steps
 		cy=2*cy;
 		real maxc=std::max(cx,cy);
@@ -577,7 +603,9 @@ void Central2D<Physics, Limiter>::run(real tfinal)
 		#pragma omp parallel for 
 		for(int s=0; s < sub_number; ++s){
 			Central2D<Physics, Limiter> sub_sim(w/size_ratio, h/size_ratio, sub_size, sub_size, time_steps);// builds sub-simulation on smaller grid
-			init_smallgrid(sub_sim, s, size_ratio);
+			if (maptov ){ init_smallgrid_from_u(sub_sim, s, size_ratio);}
+			else{init_smallgrid_from_v(sub_sim,s,size_ratio);}
+		
 			real local_cx, local_cy;
 			for (int io = 0; io < time_steps; ++io) {
 
@@ -587,20 +615,26 @@ void Central2D<Physics, Limiter>::run(real tfinal)
 				sub_sim.compute_step(io%2, dt);
 
 			}
-			map_to_maingrid( sub_sim, s, size_ratio);
+			if (maptov){map_to_v( sub_sim, s, size_ratio);}
+			else {map_to_u(sub_sim,s,size_ratio);}
 		}
-		#pragma omp parallel for
-		for( int iy =0; iy < ny_all; ++iy)
-			for( int ix=0; ix < nx_all; ++ix){
-			u_h(ix,iy)=v_h(ix,iy);
-			u_hu(ix,iy)=v_hu(ix,iy);
-			u_hv(ix,iy)=v_hv(ix,iy);
-			}
+
 		if(t+time_steps*dt==tfinal){
 			done=true;}
 		else{t+=time_steps*dt;}
-	}	
+	}
+	if (maptov){
+	#pragma omp parallel for
+	for( int iy =0; iy < ny_all; ++iy)
+		for( int ix=0; ix < nx_all; ++ix){
+			u_h(ix,iy)=v_h(ix,iy);
+			u_hu(ix,iy)=v_hu(ix,iy);
+			u_hv(ix,iy)=v_hv(ix,iy);
+		}
+	}
+	
 }
+
 
 /**
  * ### Diagnostics
@@ -639,7 +673,7 @@ void Central2D<Physics, Limiter>::solution_check()
            h_sum, hu_sum, hv_sum, hmin, hmax);
 }
 template <class Physics, class Limiter>
-void Central2D<Physics, Limiter>::init_smallgrid( Central2D<Physics, Limiter>& sub_sim, int s, int size_ratio ){
+void Central2D<Physics, Limiter>::init_smallgrid_from_u( Central2D<Physics, Limiter>& sub_sim, int s, int size_ratio ){
 	int ycoor= (s/size_ratio)*sub_sim.nx;
 	int xcoor = (s % size_ratio)*sub_sim.nx;
 	int t = sub_sim.time_steps;
@@ -670,12 +704,43 @@ void Central2D<Physics, Limiter>::init_smallgrid( Central2D<Physics, Limiter>& s
 	
 }
 
+template <class Physics, class Limiter>
+void Central2D<Physics, Limiter>::init_smallgrid_from_v( Central2D<Physics, Limiter>& sub_sim, int s, int size_ratio ){
+	int ycoor= (s/size_ratio)*sub_sim.nx;
+	int xcoor = (s % size_ratio)*sub_sim.nx;
+	int t = sub_sim.time_steps;
+	int x,y;
+
+	for( int i=0; i < sub_sim.nx_all; ++i){
+		for( int j=0; j < sub_sim.ny_all; ++j){
+	/**		if( xcoor -t*nghost+i < 0){
+				x=nx+(xcoor-t*nghost+i);
+			}else if( xcoor -t*nghost+i >= nx){
+				x=xcoor-t*nghost+i - nx;
+			}else{ x = xcoor-t*nghost+i; }	
+			
+			if( ycoor -t*nghost+j < 0){
+				y=ny+(ycoor-t*nghost+j);
+			}else if( ycoor -t*nghost+j >= ny){
+				y=ycoor-t*nghost+j - ny;
+	
+			}else{ y = ycoor-t*nghost+j; } */
+			x=(nx+xcoor-t*nghost+i)%nx;
+			y=(ny+ycoor-t*nghost+j)%ny;	
+			sub_sim.u_h(i,j)=v_h(x,y);
+			sub_sim.u_hu(i,j)=v_hu(x,y);
+			sub_sim.u_hv(i,j)=v_hv(x,y);
+			
+		}
+	}
+	
+}
 /** This function maps the smaller grid back to their position on the big grid
 * does not include the ghost cells of the small grid
 *
 */
 template <class Physics, class Limiter>
-void Central2D<Physics, Limiter>::map_to_maingrid( Central2D<Physics, Limiter>& sub_sim, int s, int size_ratio ){
+void Central2D<Physics, Limiter>::map_to_v( Central2D<Physics, Limiter>& sub_sim, int s, int size_ratio ){
 	int ycoor= (s/size_ratio)*sub_sim.nx;
 	int xcoor = (s % size_ratio)*sub_sim.nx;
 	int t = sub_sim.time_steps;
@@ -691,6 +756,25 @@ void Central2D<Physics, Limiter>::map_to_maingrid( Central2D<Physics, Limiter>& 
 	}
 	
 }
+//*same but maps to u
+//*/
 
+template <class Physics, class Limiter>
+void Central2D<Physics, Limiter>::map_to_u( Central2D<Physics, Limiter>& sub_sim, int s, int size_ratio ){
+	int ycoor= (s/size_ratio)*sub_sim.nx;
+	int xcoor = (s % size_ratio)*sub_sim.nx;
+	int t = sub_sim.time_steps;
+
+
+	for( int i=0; i < sub_sim.nx; ++i){
+		for( int j=0; j < sub_sim.nx; ++j){
+			u_h(xcoor+i,ycoor+j)= sub_sim.u_h(i+t*nghost,j+t*nghost);
+			u_hu(xcoor+i,ycoor+j)= sub_sim.u_hu(i+t*nghost,j+t*nghost);
+			u_hv(xcoor+i,ycoor+j)= sub_sim.u_hv(i+t*nghost,j+t*nghost);
+			
+		}
+	}
+	
+}
 //ldoc off
 #endif /* CENTRAL2D_H*/
