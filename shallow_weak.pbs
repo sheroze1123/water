@@ -1,0 +1,58 @@
+#!/bin/sh -l
+
+#PBS -l nodes=1:ppn=24
+#PBS -l walltime=0:30:00
+#PBS -N shallow
+#PBS -j oe
+
+module load cs5220
+cd $PBS_O_WORKDIR
+export OMP_NUM_THREADS=1
+./shallow -i wave -o wave.out -n 300
+cp timings.csv timings_t1.csv
+cp average.csv average_t1.csv
+
+export OMP_NUM_THREADS=2
+./shallow -i wave -o wave.out -n 420
+cp timings.csv timings_t2.csv
+cp average.csv average_t2.csv
+
+export OMP_NUM_THREADS=3
+./shallow -i wave -o wave.out -n 520
+cp timings.csv timings_t3.csv
+cp average.csv average_t3.csv
+
+export OMP_NUM_THREADS=4
+./shallow -i wave -o wave.out -n 600
+cp timings.csv timings_t4.csv
+cp average.csv average_t4.csv
+
+export OMP_NUM_THREADS=5
+./shallow -i wave -o wave.out -n 670
+cp timings.csv timings_t5.csv
+cp average.csv average_t5.csv
+
+export OMP_NUM_THREADS=6
+./shallow -i wave -o wave.out -n 730
+cp timings.csv timings_t6.csv
+cp average.csv average_t6.csv
+
+export OMP_NUM_THREADS=7
+./shallow -i wave -o wave.out -n 790
+cp timings.csv timings_t7.csv
+cp average.csv average_t7.csv
+
+export OMP_NUM_THREADS=8
+./shallow -i wave -o wave.out -n 850
+cp timings.csv timings_t8.csv
+cp average.csv average_t8.csv
+
+export OMP_NUM_THREADS=9
+./shallow -i wave -o wave.out -n 900
+cp timings.csv timings_t9.csv
+cp average.csv average_t9.csv
+
+export OMP_NUM_THREADS=10
+./shallow -i wave -o wave.out -n 950
+cp timings.csv timings_t10.csv
+cp average.csv average_t10.csv
