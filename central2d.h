@@ -582,7 +582,7 @@ void Central2D<Physics, Limiter>::run(real tfinal)
     
     bool done = false;
     real t = 0;
-    int size_ratio=6; // big/small
+    int size_ratio=4; // big/small
     int sub_size = nx/size_ratio; // size of subdomain
     int sub_number = nx*nx/sub_size/sub_size;
     int f = floor(floor(0.069*sub_size- 1/6)/2)*2;

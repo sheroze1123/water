@@ -18,7 +18,7 @@ cp timings.csv timings_t2.csv
 cp average.csv average_t2.csv
 
 export OMP_NUM_THREADS=3
-./shallow -i wave -o wave.out -n 519
+./shallow -i wave -o wave.out -n 520
 cp timings.csv timings_t3.csv
 cp average.csv average_t3.csv
 
@@ -33,12 +33,12 @@ cp timings.csv timings_t5.csv
 cp average.csv average_t5.csv
 
 export OMP_NUM_THREADS=6
-./shallow -i wave -o wave.out -n 734
+./shallow -i wave -o wave.out -n 736
 cp timings.csv timings_t6.csv
 cp average.csv average_t6.csv
 
 export OMP_NUM_THREADS=7
-./shallow -i wave -o wave.out -n 793
+./shallow -i wave -o wave.out -n 792
 cp timings.csv timings_t7.csv
 cp average.csv average_t7.csv
 
