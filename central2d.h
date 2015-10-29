@@ -582,10 +582,10 @@ void Central2D<Physics, Limiter>::run(real tfinal)
     
     bool done = false;
     real t = 0;
-    int size_ratio=10; // big/small
+    int size_ratio=6; // big/small
     int sub_size = nx/size_ratio; // size of subdomain
     int sub_number = nx*nx/sub_size/sub_size;
-    int time_steps= 10; // number of time steps done before synchronisation -- MUST BE EVEN
+    int time_steps= std::max(2, floor(floor(0.069*nx - 1/6)/2)*2); // number of time steps done before synchronisation -- MUST BE EVEN
     bool maptov=false;
    
     while (!done) { 
@@ -593,8 +593,8 @@ void Central2D<Physics, Limiter>::run(real tfinal)
         	real dt;
 		real cx, cy;
 		if (maptov) { compute_fg_speeds_u(cx, cy); } else { compute_fg_speeds_v(cx,cy);}
-		cx = 2*cx; // overestimating cx and cy as we wont be recomputing it for the next #time_steps steps
-		cy=2*cy;
+		cx = 1.5*cx; // overestimating cx and cy as we wont be recomputing it for the next #time_steps steps
+		cy=1.5*cy;
 		real maxc=std::max(cx,cy);
 		dt = cfl / std::max(cx/dx, cy/dy);
 		if (t+time_steps*dt >= tfinal){ // if the next #time_steps steps bring us to the end, set dt to be 1/time_steps of that
@@ -602,7 +602,7 @@ void Central2D<Physics, Limiter>::run(real tfinal)
 		}
 		#pragma omp parallel for 
 		for(int s=0; s < sub_number; ++s){
-			Central2D<Physics, Limiter> sub_sim(w/size_ratio, h/size_ratio, sub_size, sub_size, time_steps);// builds sub-simulation on smaller grid
+			Central2D<Physics, Limiter> sub_sim(w/size_ratio, h/size_ratio, sub_size, sub_size, time_steps/2 +1);// builds sub-simulation on smaller grid
 			if (maptov ){ init_smallgrid_from_u(sub_sim, s, size_ratio);}
 			else{init_smallgrid_from_v(sub_sim,s,size_ratio);}
 		
