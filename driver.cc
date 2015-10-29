@@ -202,7 +202,8 @@ int main(int argc, char** argv)
     } else {
         fprintf(stderr, "Unknown initial conditions\n");
     }
-    
+    int ratio = 4;
+    nx = ceil(nx/4)*4;   
     Sim sim(width,width, nx,nx, 0);
     SimViz<Sim> viz(fname.c_str(), sim);
     sim.init(icfun1, icfun2, icfun3);
