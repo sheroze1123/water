@@ -585,7 +585,7 @@ void Central2D<Physics, Limiter>::run(real tfinal)
     int size_ratio=4; // big/small
     int sub_size = nx/size_ratio; // size of subdomain
     int sub_number = nx*nx/sub_size/sub_size;
-    int f = floor(floor(0.069*sub_size- 1/6)/2)*2;
+    int f = floor(floor(0.2761*sub_size-2)/2)*2;
     int time_steps= std::max(2 ,f); // number of time steps done before synchronisation -- MUST BE EVEN
     bool maptov=false;
    
