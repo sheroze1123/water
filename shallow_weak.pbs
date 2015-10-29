@@ -2,7 +2,7 @@
 
 #PBS -l nodes=1:ppn=24
 #PBS -l walltime=0:30:00
-#PBS -N shallow
+#PBS -N shallow_weak
 #PBS -j oe
 
 module load cs5220
@@ -13,7 +13,7 @@ cp timings.csv timings_t1.csv
 cp average.csv average_t1.csv
 
 export OMP_NUM_THREADS=2
-./shallow -i wave -o wave.out -n 424
+./shallow -i wave -o wave.out -n 420
 cp timings.csv timings_t2.csv
 cp average.csv average_t2.csv
 
@@ -28,22 +28,22 @@ cp timings.csv timings_t4.csv
 cp average.csv average_t4.csv
 
 export OMP_NUM_THREADS=5
-./shallow -i wave -o wave.out -n 670
+./shallow -i wave -o wave.out -n 680
 cp timings.csv timings_t5.csv
 cp average.csv average_t5.csv
 
 export OMP_NUM_THREADS=6
-./shallow -i wave -o wave.out -n 736
+./shallow -i wave -o wave.out -n 740
 cp timings.csv timings_t6.csv
 cp average.csv average_t6.csv
 
 export OMP_NUM_THREADS=7
-./shallow -i wave -o wave.out -n 792
+./shallow -i wave -o wave.out -n 800
 cp timings.csv timings_t7.csv
 cp average.csv average_t7.csv
 
 export OMP_NUM_THREADS=8
-./shallow -i wave -o wave.out -n 848
+./shallow -i wave -o wave.out -n 860
 cp timings.csv timings_t8.csv
 cp average.csv average_t8.csv
 
@@ -53,6 +53,6 @@ cp timings.csv timings_t9.csv
 cp average.csv average_t9.csv
 
 export OMP_NUM_THREADS=10
-./shallow -i wave -o wave.out -n 948
+./shallow -i wave -o wave.out -n 960
 cp timings.csv timings_t10.csv
 cp average.csv average_t10.csv
